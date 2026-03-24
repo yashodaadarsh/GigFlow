@@ -1,13 +1,2 @@
 nohup: ignoring input
-INFO:     Started server process [38640]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     127.0.0.1:52292 - "POST /api/recommend HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53302 - "POST /api/recommend HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53302 - "POST /api/recommend HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36956 - "POST /api/recommend HTTP/1.1" 200 OK
-INFO:     127.0.0.1:33978 - "POST /api/recommend HTTP/1.1" 200 OK
-INFO:     127.0.0.1:37014 - "POST /api/recommend HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60596 - "POST /api/recommend HTTP/1.1" 200 OK
-INFO:     127.0.0.1:43918 - "POST /api/recommend HTTP/1.1" 200 OK
+nohup: failed to run command './venv/bin/uvicorn': No such file or directory
