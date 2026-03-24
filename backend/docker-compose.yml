@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: freelance_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - freelance_net
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/freelance_auth?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpw
+      - JWT_SECRET=supersecretkeyfortheplatform94a08da1fecbb6e8b46990538c7b50b2c153e7f59d4c1fbc4469d4d5eb6e50e9
+    depends_on:
+      - mysql
+    networks:
+      - freelance_net
+
+  gig-service:
+    build: ./gig-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/freelance_gig?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpw
+      - ML_SERVICE_URL=http://ml-service:8000
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8083
+      - JWT_SECRET=supersecretkeyfortheplatform94a08da1fecbb6e8b46990538c7b50b2c153e7f59d4c1fbc4469d4d5eb6e50e9
+    depends_on:
+      - mysql
+    networks:
+      - freelance_net
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/freelance_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpw
+      - JWT_SECRET=supersecretkeyfortheplatform94a08da1fecbb6e8b46990538c7b50b2c153e7f59d4c1fbc4469d4d5eb6e50e9
+    depends_on:
+      - mysql
+    networks:
+      - freelance_net
+
+  ml-service:
+    build: ./ml-recommendation
+    ports:
+      - "8000:8000"
+    networks:
+      - freelance_net
+
+volumes:
+  mysql_data:
+
+
+networks:
+  freelance_net:
+    driver: bridge

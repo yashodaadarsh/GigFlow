@@ -1,0 +1,135 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< com.example:demo >--------------------------
+[INFO] Building auth-service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.3:run (default-cli) > test-compile @ demo >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ demo ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ demo ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 14 source files with javac [debug parameters release 21] to target/classes
+[INFO] /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/src/main/java/com/freelance/auth/security/JwtAuthenticationFilter.java: /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/src/main/java/com/freelance/auth/security/JwtAuthenticationFilter.java uses or overrides a deprecated API.
+[INFO] /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/src/main/java/com/freelance/auth/security/JwtAuthenticationFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/src/main/java/com/freelance/auth/service/AuthService.java: /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/src/main/java/com/freelance/auth/service/AuthService.java uses unchecked or unsafe operations.
+[INFO] /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/src/main/java/com/freelance/auth/service/AuthService.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ demo ---
+[INFO] skip non existing resourceDirectory /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ demo ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:4.0.3:run (default-cli) < test-compile @ demo <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.3:run (default-cli) @ demo ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-03-24T18:13:51.994+05:30  INFO 47653 --- [auth-service] [           main] c.freelance.auth.AuthServiceApplication  : Starting AuthServiceApplication using Java 21.0.10 with PID 47653 (/home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service/target/classes started by yashoda-adarsh in /home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/auth-service)
+2026-03-24T18:13:52.000+05:30  INFO 47653 --- [auth-service] [           main] c.freelance.auth.AuthServiceApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-03-24T18:13:53.699+05:30  INFO 47653 --- [auth-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-24T18:13:53.789+05:30  INFO 47653 --- [auth-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 1 JPA repository interface.
+2026-03-24T18:13:54.829+05:30  INFO 47653 --- [auth-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8081 (http)
+2026-03-24T18:13:54.855+05:30  INFO 47653 --- [auth-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-24T18:13:54.855+05:30  INFO 47653 --- [auth-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-24T18:13:54.932+05:30  INFO 47653 --- [auth-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2696 ms
+2026-03-24T18:13:55.205+05:30  INFO 47653 --- [auth-service] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-24T18:13:55.296+05:30  INFO 47653 --- [auth-service] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-24T18:13:56.047+05:30  INFO 47653 --- [auth-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-24T18:13:56.103+05:30  INFO 47653 --- [auth-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-24T18:13:56.394+05:30  INFO 47653 --- [auth-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4c6fc3e7
+2026-03-24T18:13:56.397+05:30  INFO 47653 --- [auth-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-24T18:13:56.556+05:30  INFO 47653 --- [auth-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/freelance_auth?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.3
+	Default catalog/schema: freelance_auth/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-24T18:13:58.767+05:30  INFO 47653 --- [auth-service] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-24T18:13:58.878+05:30  INFO 47653 --- [auth-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-24T18:13:59.048+05:30  INFO 47653 --- [auth-service] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-24T18:13:59.600+05:30  INFO 47653 --- [auth-service] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-24T18:13:59.601+05:30  WARN 47653 --- [auth-service] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-24T18:13:59.746+05:30  WARN 47653 --- [auth-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-24T18:14:00.943+05:30  INFO 47653 --- [auth-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-03-24T18:14:00.952+05:30  INFO 47653 --- [auth-service] [           main] c.freelance.auth.AuthServiceApplication  : Started AuthServiceApplication in 9.725 seconds (process running for 10.628)
+2026-03-24T18:14:34.838+05:30  INFO 47653 --- [auth-service] [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-24T18:14:34.839+05:30  INFO 47653 --- [auth-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-24T18:14:34.842+05:30  INFO 47653 --- [auth-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.id in (?)
+Hibernate: select u1_0.id,u1_0.assigned_gigs,u1_0.bank_details,u1_0.completed_gigs,u1_0.created_at,u1_0.email,u1_0.gigs_posted,u1_0.name,u1_0.organisation,u1_0.password,u1_0.phone,u1_0.rating,u1_0.role,u1_0.skills from users u1_0 where u1_0.email=?
+Hibernate: insert into users (assigned_gigs,bank_details,completed_gigs,created_at,email,gigs_posted,name,organisation,password,phone,rating,role,skills) values (?,?,?,?,?,?,?,?,?,?,?,?,?)
