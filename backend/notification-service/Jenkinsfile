@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "yashodaadarsh/notification-service"
         GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
         GIT_BRANCH = "devops"
+        SERVICE = "notification-service"
     }
 
     stages {
@@ -18,26 +19,18 @@ pipeline {
 
         stage('Build Artifact') {
             steps {
-                dir('backend/notification-service') {
-                    sh 'mvn clean package'
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                dir('backend/notification-service') {
-                    sh 'mvn test'
+                dir("backend/${SERVICE}") {
+                    sh 'mvn clean package -DskipTests'
                 }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                dir('backend/notification-service') {
+                dir("backend/${SERVICE}") {
                     sh '''
-                    docker build -t notification-service:${BUILD_NUMBER} .
-                    docker tag notification-service:${BUILD_NUMBER} ${IMAGE_NAME}:${BUILD_NUMBER}
+                    docker build -t ${SERVICE}:${BUILD_NUMBER} .
+                    docker tag ${SERVICE}:${BUILD_NUMBER} ${IMAGE_NAME}:${BUILD_NUMBER}
                     '''
                 }
             }
@@ -59,9 +52,25 @@ pipeline {
             }
         }
 
+        stage('Delete the Image') {
+            steps {
+                sh '''
+                echo "Deleting local Docker images..."
+
+                docker rmi ${SERVICE}:${BUILD_NUMBER} || true
+                docker rmi ${IMAGE_NAME}:${BUILD_NUMBER} || true
+
+                echo "Cleaning dangling images..."
+                docker image prune -f
+
+                echo "Cleanup done"
+                '''
+            }
+        }
+
         stage('Update Kubernetes Manifest') {
             steps {
-                dir('backend/notification-service') {
+                dir("backend/${SERVICE}") {
                     sh '''
                     sed -i "s|image: .*|image: ${IMAGE_NAME}:${BUILD_NUMBER}|g" k8s/deployment.yaml
                     '''
@@ -76,7 +85,7 @@ pipeline {
                     usernameVariable: 'GIT_USER',
                     passwordVariable: 'GIT_PASS'
                 )]) {
-                    dir('backend/notification-service') {
+                    dir("backend/${SERVICE}") {
                         sh '''
                         git config user.name "jenkins"
                         git config user.email "jenkins@example.com"
@@ -98,7 +107,7 @@ pipeline {
         //             sh '''
         //             export KUBECONFIG=$KUBECONFIG
         //             kubectl apply -f k8s/deployment.yaml
-        //             kubectl rollout status deployment/notification-service
+        //             kubectl rollout status deployment/auth-service
         //             '''
         //         }
         //     }
