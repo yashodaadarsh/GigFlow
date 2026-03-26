@@ -76,16 +76,18 @@ pipeline {
                     usernameVariable: 'GIT_USER',
                     passwordVariable: 'GIT_PASS'
                 )]) {
-                    sh '''
-                    git config user.name "jenkins"
-                    git config user.email "jenkins@example.com"
+                    dir('backend/gig-service') {
+                        sh '''
+                        git config user.name "jenkins"
+                        git config user.email "jenkins@example.com"
 
-                    git add k8s/deployment.yaml
+                        git add k8s/deployment.yaml
 
-                    git commit -m "Updated image to ${BUILD_NUMBER}" || echo "No changes to commit"
+                        git commit -m "Updated image to ${BUILD_NUMBER}" || echo "No changes to commit"
 
-                    git push https://${GIT_USER}:${GIT_PASS}@github.com/yashodaadarsh/GigFlow.git ${GIT_BRANCH}
-                    '''
+                        git push https://${GIT_USER}:${GIT_PASS}@github.com/yashodaadarsh/GigFlow.git ${GIT_BRANCH}
+                        '''
+                    }
                 }
             }
         }
