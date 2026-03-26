@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginSuccess } from '../features/auth/authSlice';
-import api from '../services/api';
+import { loginSuccess } from '../redux/slices/auth.slice';
+import api from '../api/api';
 
 export default function Signup() {
   const [formData, setFormData] = useState({

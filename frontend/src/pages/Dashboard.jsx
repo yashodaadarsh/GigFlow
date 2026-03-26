@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { logout } from '../redux/slices/auth.slice';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../api/api';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 
@@ -17,11 +17,11 @@ export default function Dashboard() {
     const [skillsString, setSkillsString] = useState('');
     const [budget, setBudget] = useState('');
     const [deadline, setDeadline] = useState('');
-    const [notifications, setNotifications] = useState([]);
-    const [bids, setBids] = useState({}); // mapped by gigId
-    const [recommendations, setRecommendations] = useState({}); // mapped by gigId
+    const [notifications, setNotifications] = useState([]);  // { type, message, hirerId, roomId, callerId } 
+    const [bids, setBids] = useState({});
+    const [recommendations, setRecommendations] = useState({});
     const [biddedGigs, setBiddedGigs] = useState([]);
-    const [bidderNames, setBidderNames] = useState({}); // map of bidderId -> name
+    const [bidderNames, setBidderNames] = useState({});
 
     // Bidder Modal State
     const [bidModalOpen, setBidModalOpen] = useState(false);
@@ -87,25 +87,25 @@ export default function Dashboard() {
         fetchGigs();
         fetchBiddedGigs();
 
-        // WebSocket connection for notifications
+        // Both HIRER and BIDDER subscribe to their notification channel via STOMP
         let stompClient = null;
-        if (user.role === 'HIRER') {
-            const socket = new SockJS('http://localhost:8083/ws');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, () => {
-                stompClient.subscribe(`/topic/notifications/${user.id}`, (msg) => {
-                    try {
-                        const notification = JSON.parse(msg.body);
-                        setNotifications(prev => [notification, ...prev]);
-                    } catch (e) {
-                        setNotifications(prev => [{ message: msg.body }, ...prev]);
-                    }
-                });
+        const socket = new SockJS('http://localhost:8083/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            stompClient.subscribe(`/topic/notifications/${user.id}`, (msg) => {
+                try {
+                    // Try to parse JSON notification payload (from communication service)
+                    const parsed = JSON.parse(msg.body);
+                    // parsed may itself be a JSON string if double-encoded
+                    const notif = typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
+                    setNotifications(prev => [{ ...notif, ts: Date.now() }, ...prev]);
+                } catch {
+                    setNotifications(prev => [{ type: 'INFO', message: msg.body, ts: Date.now() }, ...prev]);
+                }
             });
-        }
-        return () => {
-            if (stompClient) stompClient.disconnect();
-        };
+        });
+
+        return () => { if (stompClient) stompClient.disconnect(); };
     }, [user, navigate]);
 
     const handlePostGig = async (e) => {
@@ -160,7 +160,7 @@ export default function Dashboard() {
         <div className="bg-gray-50 min-h-screen p-8">
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header */}
-                <div className="bg-white shadow-lg rounded-2xl p-6 flex justify-between items-center transition-all duration-300">
+                <div className="bg-white shadow-lg rounded-2xl p-6 flex justify-between items-center">
                     <div>
                         <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard</h2>
                         <p className="text-sm text-gray-500 mt-1">Logged in as <span className="font-semibold text-blue-600">{user?.name} ({user?.role})</span></p>
@@ -170,17 +170,45 @@ export default function Dashboard() {
                     </button>
                 </div>
 
-                {/* Notifications Panel (For Hirer) */}
-                {user?.role === 'HIRER' && notifications.length > 0 && (
-                    <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm">
-                        <h3 className="text-lg font-bold text-blue-800 mb-2">Real-Time Notifications</h3>
-                        <div className="space-y-2 max-h-40 overflow-y-auto">
-                            {notifications.map((notif, i) => (
-                                <div key={i} className="bg-white p-3 rounded shadow-sm text-sm text-gray-700 border border-blue-100">
-                                    {notif.message}
+                {/* ===== SMART NOTIFICATION PANEL (Both Roles) ===== */}
+                {notifications.length > 0 && (
+                    <div className="space-y-2">
+                        {notifications.slice(0, 5).map((notif, i) => (
+                            <div key={i} className={`rounded-xl px-5 py-4 flex items-center justify-between shadow-sm border ${
+                                notif.type === 'INCOMING_VIDEO_CALL'
+                                    ? 'bg-pink-50 border-pink-200 text-pink-800'
+                                    : notif.type === 'CHAT_REQUEST' || notif.type === 'NEW_MESSAGE'
+                                        ? 'bg-indigo-50 border-indigo-200 text-indigo-800'
+                                        : 'bg-blue-50 border-blue-200 text-blue-800'
+                            }`}>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xl">
+                                        {notif.type === 'INCOMING_VIDEO_CALL' ? '📹' : notif.type === 'CHAT_REQUEST' ? '💬' : notif.type === 'NEW_MESSAGE' ? '✉️' : '🔔'}
+                                    </span>
+                                    <span className="font-semibold text-sm">{notif.message}</span>
                                 </div>
-                            ))}
-                        </div>
+                                <div className="flex gap-2 ml-4 flex-shrink-0">
+                                    {/* Chat action */}
+                                    {(notif.type === 'CHAT_REQUEST' || notif.type === 'NEW_MESSAGE') && notif.hirerId && (
+                                        <button
+                                            onClick={() => navigate(`/chat/${notif.hirerId}`)}
+                                            className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-bold transition"
+                                        >Open Chat</button>
+                                    )}
+                                    {/* Video call action */}
+                                    {notif.type === 'INCOMING_VIDEO_CALL' && notif.callerId && (
+                                        <button
+                                            onClick={() => navigate(`/video-call/${notif.callerId}`)}
+                                            className="text-xs bg-pink-600 hover:bg-pink-700 text-white px-3 py-1.5 rounded-lg font-bold transition"
+                                        >Join Call</button>
+                                    )}
+                                    <button
+                                        onClick={() => setNotifications(prev => prev.filter((_, idx) => idx !== i))}
+                                        className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1"
+                                    >✕</button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
 
@@ -240,14 +268,12 @@ export default function Dashboard() {
                                                                         <div className="font-semibold text-gray-900">
                                                                             {rec.bidderName || `Bidder #${rec.bidderId}`}
                                                                         </div>
-                                                                        <a
-                                                                            href={`/profile/${rec.bidderId}`}
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
+                                                                        <Link
+                                                                            to={`/profile/${rec.bidderId}`}
                                                                             className="text-xs text-indigo-500 hover:text-indigo-700 hover:underline"
                                                                         >
                                                                             View Profile →
-                                                                        </a>
+                                                                        </Link>
                                                                     </div>
                                                                 </div>
                                                                 <div className="text-indigo-600 font-bold bg-indigo-100 px-3 py-1 rounded-full text-xs">
@@ -268,7 +294,7 @@ export default function Dashboard() {
                                                             <div key={bid.id} className="bg-white p-3 rounded border text-sm flex justify-between">
                                                                 <div>
                                                                     <span className="font-semibold text-gray-900">{bidderNames[bid.bidderId] || `Bidder #${bid.bidderId}`}</span>
-                                                                    <a href={`/profile/${bid.bidderId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-500 hover:underline ml-2">View Profile →</a>
+                                                                    <Link to={`/profile/${bid.bidderId}`} className="text-xs text-indigo-500 hover:underline ml-2">View Profile →</Link>
                                                                     <p className="text-gray-600 mt-1">{bid.proposal}</p>
                                                                 </div>
                                                                 <div className="text-green-600 font-bold">${bid.budget}</div>
@@ -290,25 +316,52 @@ export default function Dashboard() {
                                         <p className="text-gray-500 italic py-4">You haven't placed any bids yet.</p>
                                     ) : (
                                         <div className="space-y-4">
-                                            {biddedGigs.map(gig => (
-                                                <div key={gig.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow bg-green-50 group">
-                                                    <div className="flex justify-between items-start">
-                                                        <div>
-                                                            <h4 className="text-lg font-bold text-gray-900 group-hover:text-green-700 transition-colors">{gig.title}</h4>
-                                                            <p className="text-sm text-gray-600 mt-1">{gig.description}</p>
-                                                            <div className="mt-3 flex flex-wrap gap-2">
-                                                                {gig.skillsRequired?.map(skill => (
-                                                                    <span key={skill} className="px-2.5 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{skill}</span>
-                                                                ))}
+                                            {biddedGigs.map(gig => {
+                                                const statusColors = {
+                                                    PENDING:     'bg-yellow-100 text-yellow-800 border-yellow-200',
+                                                    SHORTLISTED: 'bg-blue-100 text-blue-800 border-blue-200',
+                                                    ACCEPTED:    'bg-green-100 text-green-800 border-green-200',
+                                                    REJECTED:    'bg-red-100 text-red-700 border-red-200',
+                                                    ONGOING:     'bg-indigo-100 text-indigo-800 border-indigo-200',
+                                                    COMPLETED:   'bg-gray-100 text-gray-700 border-gray-200',
+                                                };
+                                                const statusIcons = {
+                                                    PENDING: '⏳', SHORTLISTED: '⭐', ACCEPTED: '✅',
+                                                    REJECTED: '❌', ONGOING: '🚀', COMPLETED: '🏁',
+                                                };
+                                                const statusClass = statusColors[gig.status] || 'bg-gray-100 text-gray-600 border-gray-200';
+                                                return (
+                                                    <div key={gig.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow bg-white group">
+                                                        <div className="flex justify-between items-start">
+                                                            <div className="flex-1">
+                                                                <h4 className="text-lg font-bold text-gray-900 group-hover:text-indigo-700 transition-colors">{gig.title}</h4>
+                                                                <p className="text-sm text-gray-600 mt-1">{gig.description}</p>
+                                                                <div className="mt-3 flex flex-wrap gap-2">
+                                                                    {gig.skillsRequired?.map(skill => (
+                                                                        <span key={skill} className="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full">{skill}</span>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                            <div className="text-right ml-4 flex flex-col items-end gap-2">
+                                                                <div className="text-xl font-bold text-green-700">${gig.budget}</div>
+                                                                <span className={`border text-xs font-bold px-3 py-1 rounded-full ${statusClass}`}>
+                                                                    {statusIcons[gig.status] || '📋'} {gig.status || 'UNKNOWN'}
+                                                                </span>
+                                                                {/* Chat with Hirer button - visible when accepted/ongoing */}
+                                                                {(gig.status === 'ACCEPTED' || gig.status === 'ONGOING') && gig.hirerId && (
+                                                                    <button
+                                                                        onClick={() => navigate(`/chat/${gig.hirerId}`)}
+                                                                        className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
+                                                                    >
+                                                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                                                                        Chat with Hirer
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         </div>
-                                                        <div className="text-right">
-                                                            <div className="text-xl font-bold text-green-700">${gig.budget}</div>
-                                                            <div className="text-xs text-gray-500 mt-1">Status: <span className="font-semibold text-gray-700">{gig.status}</span></div>
-                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     )}
                                 </div>
