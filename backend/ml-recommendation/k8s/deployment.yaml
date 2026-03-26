@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-service-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-service
+  template:
+    metadata:
+      labels:
+        app: ml-service
+    spec:
+      containers:
+      - name: ml-service
+        image: yashodaadarsh/my-k8s-cicd-app:latest  # your Docker Hub image
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080

@@ -1,0 +1,85 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "yashodaadarsh/ml-service"
+        GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
+        GIT_BRANCH = "devops"
+    }
+
+    stages {
+
+        stage('Checkout from GitHub') {
+            steps {
+                deleteDir()
+                git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t ml-service:${BUILD_NUMBER} .
+                docker tag ml-service:${BUILD_NUMBER} ${IMAGE_NAME}:${BUILD_NUMBER}
+                '''
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker push ${IMAGE_NAME}:${BUILD_NUMBER}
+                    docker logout
+                    '''
+                }
+            }
+        }
+
+        stage('Update Kubernetes Manifest') {
+            steps {
+                sh '''
+                sed -i "s|image: .*|image: ${IMAGE_NAME}:${BUILD_NUMBER}|g" k8s/deployment.yaml
+                '''
+            }
+        }
+
+        stage('Commit & Push Manifest to GitHub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_PASS'
+                )]) {
+                    sh '''
+                    git config user.name "jenkins"
+                    git config user.email "jenkins@example.com"
+
+                    git add k8s/deployment.yaml
+
+                    git commit -m "Updated image to ${BUILD_NUMBER}" || echo "No changes to commit"
+
+                    git push https://${GIT_USER}:${GIT_PASS}@github.com/yashodaadarsh/GigFlow.git ${GIT_BRANCH}
+                    '''
+                }
+            }
+        }
+
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+        //             sh '''
+        //             export KUBECONFIG=$KUBECONFIG
+        //             kubectl apply -f k8s/deployment.yaml
+        //             kubectl rollout status deployment/ml-service
+        //             '''
+        //         }
+        //     }
+        // }
+    }
+}
