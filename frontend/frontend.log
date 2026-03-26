@@ -1,0 +1,12 @@
+nohup: ignoring input
+
+> frontend@0.0.0 dev
+> vite
+
+
+  VITE v5.4.21  ready in 231 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+10:23:55 PM [vite] hmr update /src/pages/Login.jsx, /src/index.css
+10:27:15 PM [vite] hmr update /src/pages/Login.jsx, /src/index.css

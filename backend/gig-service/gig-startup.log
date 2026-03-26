@@ -1,0 +1,91 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< com.example:demo >--------------------------
+[INFO] Building gig-service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ demo ---
+[INFO] Deleting /home/user/temp/MINI_2/GigFlow/backend/gig-service/target
+[INFO] 
+[INFO] >>> spring-boot:4.0.3:run (default-cli) > test-compile @ demo >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ demo ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ demo ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 21 source files with javac [debug parameters release 21] to target/classes
+[INFO] /home/user/temp/MINI_2/GigFlow/backend/gig-service/src/main/java/com/freelance/gig/security/JwtAuthenticationFilter.java: /home/user/temp/MINI_2/GigFlow/backend/gig-service/src/main/java/com/freelance/gig/security/JwtAuthenticationFilter.java uses or overrides a deprecated API.
+[INFO] /home/user/temp/MINI_2/GigFlow/backend/gig-service/src/main/java/com/freelance/gig/security/JwtAuthenticationFilter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /home/user/temp/MINI_2/GigFlow/backend/gig-service/src/main/java/com/freelance/gig/service/GigService.java: /home/user/temp/MINI_2/GigFlow/backend/gig-service/src/main/java/com/freelance/gig/service/GigService.java uses unchecked or unsafe operations.
+[INFO] /home/user/temp/MINI_2/GigFlow/backend/gig-service/src/main/java/com/freelance/gig/service/GigService.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ demo ---
+[INFO] skip non existing resourceDirectory /home/user/temp/MINI_2/GigFlow/backend/gig-service/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ demo ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:4.0.3:run (default-cli) < test-compile @ demo <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.3:run (default-cli) @ demo ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-03-24T23:08:50.959+05:30  INFO 17408 --- [gig-service] [           main] c.freelance.gig.GigServiceApplication    : Starting GigServiceApplication using Java 21.0.7 with PID 17408 (/home/user/temp/MINI_2/GigFlow/backend/gig-service/target/classes started by user in /home/user/temp/MINI_2/GigFlow/backend/gig-service)
+2026-03-24T23:08:50.964+05:30  INFO 17408 --- [gig-service] [           main] c.freelance.gig.GigServiceApplication    : The following 1 profile is active: "dev"
+2026-03-24T23:08:51.867+05:30  INFO 17408 --- [gig-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-24T23:08:51.930+05:30  INFO 17408 --- [gig-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 53 ms. Found 2 JPA repository interfaces.
+2026-03-24T23:08:52.568+05:30  INFO 17408 --- [gig-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8082 (http)
+2026-03-24T23:08:52.582+05:30  INFO 17408 --- [gig-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-24T23:08:52.582+05:30  INFO 17408 --- [gig-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-24T23:08:52.627+05:30  INFO 17408 --- [gig-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1568 ms
+2026-03-24T23:08:52.854+05:30  INFO 17408 --- [gig-service] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-24T23:08:52.926+05:30  INFO 17408 --- [gig-service] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-24T23:08:53.393+05:30  INFO 17408 --- [gig-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-24T23:08:53.434+05:30  INFO 17408 --- [gig-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-24T23:08:53.632+05:30  INFO 17408 --- [gig-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7eefaca0
+2026-03-24T23:08:53.634+05:30  INFO 17408 --- [gig-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-24T23:08:53.717+05:30  INFO 17408 --- [gig-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/freelance_gig?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.42
+	Default catalog/schema: freelance_gig/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-24T23:08:54.693+05:30  INFO 17408 --- [gig-service] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-24T23:08:54.771+05:30  INFO 17408 --- [gig-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-24T23:08:54.934+05:30  INFO 17408 --- [gig-service] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-24T23:08:55.227+05:30  WARN 17408 --- [gig-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-24T23:08:55.329+05:30  WARN 17408 --- [gig-service] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 79eaa483-6274-457e-b1f2-c40357866a73
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-24T23:08:55.337+05:30  INFO 17408 --- [gig-service] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-03-24T23:08:56.006+05:30  INFO 17408 --- [gig-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8082 (http) with context path '/'
+2026-03-24T23:08:56.012+05:30  INFO 17408 --- [gig-service] [           main] c.freelance.gig.GigServiceApplication    : Started GigServiceApplication in 5.754 seconds (process running for 6.395)
+2026-03-24T23:09:12.728+05:30  INFO 17408 --- [gig-service] [ionShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-24T23:09:12.738+05:30  INFO 17408 --- [gig-service] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-03-24T23:09:12.747+05:30  INFO 17408 --- [gig-service] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-24T23:09:12.750+05:30  INFO 17408 --- [gig-service] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-03-24T23:09:12.763+05:30  INFO 17408 --- [gig-service] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+/display/MAVEN/MojoExecutionException

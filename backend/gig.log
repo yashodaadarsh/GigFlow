@@ -1,0 +1,192 @@
+nohup: ignoring input
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-03-24T23:21:46.013+05:30  INFO 19997 --- [gig-service] [           main] c.freelance.gig.GigServiceApplication    : Starting GigServiceApplication v0.0.1-SNAPSHOT using Java 21.0.7 with PID 19997 (/home/user/temp/MINI_2/GigFlow/backend/gig-service/target/demo-0.0.1-SNAPSHOT.jar started by user in /home/user/temp/MINI_2/GigFlow/backend)
+2026-03-24T23:21:46.042+05:30  INFO 19997 --- [gig-service] [           main] c.freelance.gig.GigServiceApplication    : The following 1 profile is active: "dev"
+2026-03-24T23:21:50.273+05:30  INFO 19997 --- [gig-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-24T23:21:50.489+05:30  INFO 19997 --- [gig-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 181 ms. Found 2 JPA repository interfaces.
+2026-03-24T23:21:52.628+05:30  INFO 19997 --- [gig-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8082 (http)
+2026-03-24T23:21:52.682+05:30  INFO 19997 --- [gig-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-24T23:21:52.685+05:30  INFO 19997 --- [gig-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-24T23:21:52.794+05:30  INFO 19997 --- [gig-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 6254 ms
+2026-03-24T23:21:53.640+05:30  INFO 19997 --- [gig-service] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-24T23:21:53.852+05:30  INFO 19997 --- [gig-service] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-24T23:21:55.690+05:30  INFO 19997 --- [gig-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-24T23:21:55.805+05:30  INFO 19997 --- [gig-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-24T23:21:56.691+05:30  INFO 19997 --- [gig-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@8b1202a
+2026-03-24T23:21:56.700+05:30  INFO 19997 --- [gig-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-24T23:21:57.015+05:30  INFO 19997 --- [gig-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/freelance_gig?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.42
+	Default catalog/schema: freelance_gig/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-24T23:21:59.634+05:30  INFO 19997 --- [gig-service] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-24T23:21:59.767+05:30  INFO 19997 --- [gig-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-24T23:22:00.087+05:30  INFO 19997 --- [gig-service] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-24T23:22:00.932+05:30  WARN 19997 --- [gig-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-24T23:22:01.075+05:30  WARN 19997 --- [gig-service] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 844b8eb1-e36b-4032-bdc4-8732432305ca
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-24T23:22:01.118+05:30  INFO 19997 --- [gig-service] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-03-24T23:22:02.579+05:30  INFO 19997 --- [gig-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8082 (http) with context path '/'
+2026-03-24T23:22:02.605+05:30  INFO 19997 --- [gig-service] [           main] c.freelance.gig.GigServiceApplication    : Started GigServiceApplication in 18.585 seconds (process running for 20.87)
+2026-03-24T23:22:56.001+05:30  INFO 19997 --- [gig-service] [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-24T23:22:56.006+05:30  INFO 19997 --- [gig-service] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-24T23:22:56.014+05:30  INFO 19997 --- [gig-service] [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+2026-03-24T23:23:59.015+05:30  WARN 19997 --- [gig-service] [nio-8082-exec-3] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "120261-03-12T20:00": Failed to deserialize `java.time.LocalDateTime` (with format 'ParseCaseSensitive(false)(Value(Year,4,10,EXCEEDS_PAD)'-'Value(MonthOfYear,2)'-'Value(DayOfMonth,2))'T'(Value(HourOfDay,2)':'Value(MinuteOfHour,2)[':'Value(SecondOfMinute,2)[Fraction(NanoOfSecond,0,9,DecimalPoint)]])'): (java.time.format.DateTimeParseException) Text '120261-03-12T20:00' could not be parsed at index 0]
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+2026-03-24T23:25:03.009+05:30  WARN 19997 --- [gig-service] [nio-8082-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "120261-03-12T20:00": Failed to deserialize `java.time.LocalDateTime` (with format 'ParseCaseSensitive(false)(Value(Year,4,10,EXCEEDS_PAD)'-'Value(MonthOfYear,2)'-'Value(DayOfMonth,2))'T'(Value(HourOfDay,2)':'Value(MinuteOfHour,2)[':'Value(SecondOfMinute,2)[Fraction(NanoOfSecond,0,9,DecimalPoint)]])'): (java.time.format.DateTimeParseException) Text '120261-03-12T20:00' could not be parsed at index 0]
+2026-03-24T23:25:40.993+05:30  WARN 19997 --- [gig-service] [nio-8082-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "61231-02-20T12:00": Failed to deserialize `java.time.LocalDateTime` (with format 'ParseCaseSensitive(false)(Value(Year,4,10,EXCEEDS_PAD)'-'Value(MonthOfYear,2)'-'Value(DayOfMonth,2))'T'(Value(HourOfDay,2)':'Value(MinuteOfHour,2)[':'Value(SecondOfMinute,2)[Fraction(NanoOfSecond,0,9,DecimalPoint)]])'): (java.time.format.DateTimeParseException) Text '61231-02-20T12:00' could not be parsed at index 0]
+2026-03-24T23:25:54.805+05:30  WARN 19997 --- [gig-service] [nio-8082-exec-8] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "31122-02-20T02:00": Failed to deserialize `java.time.LocalDateTime` (with format 'ParseCaseSensitive(false)(Value(Year,4,10,EXCEEDS_PAD)'-'Value(MonthOfYear,2)'-'Value(DayOfMonth,2))'T'(Value(HourOfDay,2)':'Value(MinuteOfHour,2)[':'Value(SecondOfMinute,2)[Fraction(NanoOfSecond,0,9,DecimalPoint)]])'): (java.time.format.DateTimeParseException) Text '31122-02-20T02:00' could not be parsed at index 0]
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: insert into gigs (budget,deadline,description,posted_by,posted_date_time,skills_required,start_date,status,title) values (?,?,?,?,?,?,?,?,?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id from bids b1_0 where b1_0.gig_id=? and b1_0.bidder_id=? limit ?
+Hibernate: insert into bids (bidder_id,budget,created_at,gig_id,proposal) values (?,?,?,?,?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: insert into gigs (budget,deadline,description,posted_by,posted_date_time,skills_required,start_date,status,title) values (?,?,?,?,?,?,?,?,?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id from bids b1_0 where b1_0.gig_id=? and b1_0.bidder_id=? limit ?
+Hibernate: insert into bids (bidder_id,budget,created_at,gig_id,proposal) values (?,?,?,?,?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?,?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id from bids b1_0 where b1_0.gig_id=? and b1_0.bidder_id=? limit ?
+Hibernate: insert into bids (bidder_id,budget,created_at,gig_id,proposal) values (?,?,?,?,?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: insert into gigs (budget,deadline,description,posted_by,posted_date_time,skills_required,start_date,status,title) values (?,?,?,?,?,?,?,?,?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id from bids b1_0 where b1_0.gig_id=? and b1_0.bidder_id=? limit ?
+Hibernate: insert into bids (bidder_id,budget,created_at,gig_id,proposal) values (?,?,?,?,?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Failed to fetch recommendations from ML service: I/O error on POST request for "http://localhost:8000/api/recommend": Connection refused
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: insert into gigs (budget,deadline,description,posted_by,posted_date_time,skills_required,start_date,status,title) values (?,?,?,?,?,?,?,?,?)
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id from bids b1_0 where b1_0.gig_id=? and b1_0.bidder_id=? limit ?
+Hibernate: insert into bids (bidder_id,budget,created_at,gig_id,proposal) values (?,?,?,?,?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.bidder_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id in (?)
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?
+Hibernate: select g1_0.id,g1_0.budget,g1_0.deadline,g1_0.description,g1_0.posted_by,g1_0.posted_date_time,g1_0.skills_required,g1_0.start_date,g1_0.status,g1_0.title from gigs g1_0 where g1_0.id=?
+Hibernate: select b1_0.id,b1_0.bidder_id,b1_0.budget,b1_0.created_at,b1_0.gig_id,b1_0.proposal from bids b1_0 where b1_0.gig_id=?

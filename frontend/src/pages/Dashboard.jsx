@@ -1,0 +1,397 @@
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+
+export default function Dashboard() {
+    const { user } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [gigs, setGigs] = useState([]);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [skillsString, setSkillsString] = useState('');
+    const [budget, setBudget] = useState('');
+    const [deadline, setDeadline] = useState('');
+    const [notifications, setNotifications] = useState([]);
+    const [bids, setBids] = useState({}); // mapped by gigId
+    const [recommendations, setRecommendations] = useState({}); // mapped by gigId
+    const [biddedGigs, setBiddedGigs] = useState([]);
+    const [bidderNames, setBidderNames] = useState({}); // map of bidderId -> name
+
+    // Bidder Modal State
+    const [bidModalOpen, setBidModalOpen] = useState(false);
+    const [selectedGigId, setSelectedGigId] = useState(null);
+    const [bidProposal, setBidProposal] = useState('');
+    const [bidAmount, setBidAmount] = useState('');
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
+
+    const fetchGigs = async () => {
+        try {
+            const endpoint = user.role === 'HIRER' ? '/gigs/my-gigs' : '/gigs';
+            const { data } = await api.get(endpoint);
+            setGigs(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error('Failed to fetch gigs', err);
+        }
+    };
+
+    const fetchBids = async (gigId) => {
+        try {
+            const { data } = await api.get(`/gigs/${gigId}/bids`);
+            setBids(prev => ({ ...prev, [gigId]: data }));
+
+            // Fetch bidder names via Vite proxy → auth-service
+            const ids = [...new Set(data.map(b => b.bidderId))].join(',');
+            if (ids) {
+                const { data: profiles } = await api.get(`/auth/users?ids=${ids}`);
+                const nameMap = {};
+                profiles.forEach(p => { nameMap[p.id] = p.name; });
+                setBidderNames(prev => ({ ...prev, ...nameMap }));
+            }
+        } catch (err) {
+            console.error('Failed to fetch bids for gig', gigId, err);
+        }
+    };
+
+    const fetchRecommendations = async (gigId) => {
+        try {
+            const { data } = await api.get(`/gigs/${gigId}/recommendations`);
+            setRecommendations(prev => ({ ...prev, [gigId]: data }));
+        } catch (err) {
+            console.error('Failed to fetch ML recommendations', err);
+            alert('Failed to load AI recommendations.');
+        }
+    };
+
+    const fetchBiddedGigs = async () => {
+        if (user?.role !== 'BIDDER') return;
+        try {
+            const { data } = await api.get('/gigs/my-bids');
+            setBiddedGigs(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error('Failed to fetch bidded gigs', err);
+        }
+    };
+
+    useEffect(() => {
+        if (!user) return navigate('/login');
+        fetchGigs();
+        fetchBiddedGigs();
+
+        // WebSocket connection for notifications
+        let stompClient = null;
+        if (user.role === 'HIRER') {
+            const socket = new SockJS('http://localhost:8083/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, () => {
+                stompClient.subscribe(`/topic/notifications/${user.id}`, (msg) => {
+                    try {
+                        const notification = JSON.parse(msg.body);
+                        setNotifications(prev => [notification, ...prev]);
+                    } catch (e) {
+                        setNotifications(prev => [{ message: msg.body }, ...prev]);
+                    }
+                });
+            });
+        }
+        return () => {
+            if (stompClient) stompClient.disconnect();
+        };
+    }, [user, navigate]);
+
+    const handlePostGig = async (e) => {
+        e.preventDefault();
+        try {
+            let formattedDeadline = deadline;
+            if (deadline) {
+                const d = new Date(deadline);
+                if (!isNaN(d.getTime())) {
+                    formattedDeadline = d.toISOString().slice(0, 16); // Extract YYYY-MM-DDThh:mm
+                }
+            }
+
+            const payload = {
+                title,
+                description,
+                skillsRequired: skillsString.split(',').map(s => s.trim()),
+                budget: parseFloat(budget),
+                deadline: formattedDeadline || null
+            };
+            await api.post('/gigs', payload);
+            fetchGigs();
+            setTitle(''); setDescription(''); setSkillsString(''); setBudget(''); setDeadline('');
+            alert('Gig posted successfully!');
+        } catch (err) {
+            alert('Failed to post gig');
+        }
+    };
+
+    const openBidModal = (gigId) => {
+        setSelectedGigId(gigId);
+        setBidProposal('');
+        setBidAmount('');
+        setBidModalOpen(true);
+    };
+
+    const handleBidSubmit = async (e) => {
+        e.preventDefault();
+        if (!bidProposal || !bidAmount) return;
+
+        try {
+            await api.post(`/gigs/${selectedGigId}/bids`, { proposal: bidProposal, budget: parseFloat(bidAmount) });
+            alert('Bid submitted successfully!');
+            setBidModalOpen(false);
+            fetchBiddedGigs();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Failed to submit bid');
+        }
+    };
+
+    return (
+        <div className="bg-gray-50 min-h-screen p-8">
+            <div className="max-w-7xl mx-auto space-y-8">
+                {/* Header */}
+                <div className="bg-white shadow-lg rounded-2xl p-6 flex justify-between items-center transition-all duration-300">
+                    <div>
+                        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard</h2>
+                        <p className="text-sm text-gray-500 mt-1">Logged in as <span className="font-semibold text-blue-600">{user?.name} ({user?.role})</span></p>
+                    </div>
+                    <button onClick={handleLogout} className="px-5 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-medium rounded-lg transition-colors border border-red-200 shadow-sm">
+                        Logout
+                    </button>
+                </div>
+
+                {/* Notifications Panel (For Hirer) */}
+                {user?.role === 'HIRER' && notifications.length > 0 && (
+                    <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm">
+                        <h3 className="text-lg font-bold text-blue-800 mb-2">Real-Time Notifications</h3>
+                        <div className="space-y-2 max-h-40 overflow-y-auto">
+                            {notifications.map((notif, i) => (
+                                <div key={i} className="bg-white p-3 rounded shadow-sm text-sm text-gray-700 border border-blue-100">
+                                    {notif.message}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Main Content Area */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <div className="bg-white shadow-lg rounded-2xl p-6">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-2">
+                                {user?.role === 'HIRER' ? 'My Posted Gigs' : 'Open Gigs to Bid'}
+                            </h3>
+
+                            {gigs.length === 0 ? (
+                                <p className="text-gray-500 italic py-4">No gigs found.</p>
+                            ) : (
+                                <div className="space-y-4">
+                                    {gigs.map(gig => (
+                                        <div key={gig.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow bg-gray-50 group">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <h4 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{gig.title}</h4>
+                                                    <p className="text-sm text-gray-600 mt-1">{gig.description}</p>
+                                                    <div className="mt-3 flex flex-wrap gap-2">
+                                                        {gig.skillsRequired?.map(skill => (
+                                                            <span key={skill} className="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{skill}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-xl font-bold text-green-600">${gig.budget}</div>
+                                                    <div className="text-xs text-gray-500 mt-1">Status: <span className="font-semibold text-gray-700">{gig.status}</span></div>
+                                                    {user?.role === 'BIDDER' && gig.status === 'OPEN' && (
+                                                        <button onClick={() => openBidModal(gig.id)} className="mt-3 px-4 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded hover:bg-blue-700 transition">Place Bid</button>
+                                                    )}
+                                                    {user?.role === 'HIRER' && (
+                                                        <div className="flex flex-col gap-2 mt-3 items-end">
+                                                            <button onClick={() => fetchBids(gig.id)} className="px-4 py-1.5 bg-gray-800 text-white text-sm font-semibold rounded hover:bg-gray-900 transition">View Bids</button>
+                                                            <button onClick={() => fetchRecommendations(gig.id)} className="px-4 py-1.5 bg-indigo-600 text-white text-sm font-semibold rounded shadow hover:bg-indigo-700 transition flex items-center gap-2">
+                                                                🪄 AI Recommends
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* AI Recommendations Panel */}
+                                            {recommendations[gig.id] && recommendations[gig.id].length > 0 && (
+                                                <div className="mt-4 pt-4 border-t border-indigo-200 bg-indigo-50 p-4 rounded-lg">
+                                                    <h5 className="font-bold text-sm mb-3 text-indigo-900 flex items-center gap-2">
+                                                        <span className="text-xl">✨</span> Top Match Candidates
+                                                    </h5>
+                                                    <div className="space-y-2">
+                                                        {recommendations[gig.id].map((rec, idx) => (
+                                                            <div key={rec.bidderId} className="bg-white p-3 rounded border border-indigo-100 shadow-sm flex justify-between items-center">
+                                                                <div className="flex items-center gap-3">
+                                                                    <span className="font-bold text-gray-500 text-sm">#{idx + 1}</span>
+                                                                    <div>
+                                                                        <div className="font-semibold text-gray-900">
+                                                                            {rec.bidderName || `Bidder #${rec.bidderId}`}
+                                                                        </div>
+                                                                        <a
+                                                                            href={`/profile/${rec.bidderId}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="text-xs text-indigo-500 hover:text-indigo-700 hover:underline"
+                                                                        >
+                                                                            View Profile →
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="text-indigo-600 font-bold bg-indigo-100 px-3 py-1 rounded-full text-xs">
+                                                                    Score: {(rec.score * 100).toFixed(1)}%
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Bids Panel for Hirer */}
+                                            {bids[gig.id] && (
+                                                <div className="mt-4 pt-4 border-t border-gray-200">
+                                                    <h5 className="font-semibold text-sm mb-2 text-gray-800">Submitted Bids:</h5>
+                                                    <div className="space-y-2">
+                                                        {bids[gig.id].length === 0 ? <p className="text-xs text-gray-500">No bids yet.</p> : bids[gig.id].map(bid => (
+                                                            <div key={bid.id} className="bg-white p-3 rounded border text-sm flex justify-between">
+                                                                <div>
+                                                                    <span className="font-semibold text-gray-900">{bidderNames[bid.bidderId] || `Bidder #${bid.bidderId}`}</span>
+                                                                    <a href={`/profile/${bid.bidderId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-500 hover:underline ml-2">View Profile →</a>
+                                                                    <p className="text-gray-600 mt-1">{bid.proposal}</p>
+                                                                </div>
+                                                                <div className="text-green-600 font-bold">${bid.budget}</div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Biddings section for bidders */}
+                            {user?.role === 'BIDDER' && (
+                                <div className="mt-8 pt-6 border-t border-gray-200">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-2">My Bidded Gigs</h3>
+                                    {biddedGigs.length === 0 ? (
+                                        <p className="text-gray-500 italic py-4">You haven't placed any bids yet.</p>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            {biddedGigs.map(gig => (
+                                                <div key={gig.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow bg-green-50 group">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <h4 className="text-lg font-bold text-gray-900 group-hover:text-green-700 transition-colors">{gig.title}</h4>
+                                                            <p className="text-sm text-gray-600 mt-1">{gig.description}</p>
+                                                            <div className="mt-3 flex flex-wrap gap-2">
+                                                                {gig.skillsRequired?.map(skill => (
+                                                                    <span key={skill} className="px-2.5 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{skill}</span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <div className="text-xl font-bold text-green-700">${gig.budget}</div>
+                                                            <div className="text-xs text-gray-500 mt-1">Status: <span className="font-semibold text-gray-700">{gig.status}</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Sidebar / Forms Panel */}
+                    <div className="lg:col-span-1 space-y-6">
+                        {user?.role === 'HIRER' && (
+                            <div className="bg-white shadow-lg rounded-2xl p-6 sticky top-8">
+                                <h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-2">Post a New Gig</h3>
+                                <form onSubmit={handlePostGig} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                        <input required value={title} onChange={e => setTitle(e.target.value)} type="text" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Need React Developer" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                        <textarea required value={description} onChange={e => setDescription(e.target.value)} rows="3" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Project details..."></textarea>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Required Skills</label>
+                                        <input required value={skillsString} onChange={e => setSkillsString(e.target.value)} type="text" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="React, Node.js, TailWind" />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Budget ($)</label>
+                                            <input required value={budget} onChange={e => setBudget(e.target.value)} type="number" min="1" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="1000" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                                            <input required value={deadline} onChange={e => setDeadline(e.target.value)} type="datetime-local" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" />
+                                        </div>
+                                    </div>
+                                    <button type="submit" className="w-full py-2.5 px-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-colors shadow-sm">
+                                        Publish Gig
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+
+                        {user?.role === 'BIDDER' && (
+                            <div className="bg-white shadow-lg rounded-2xl p-6 sticky top-8">
+                                <h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-2">Profile Stats</h3>
+                                <div className="space-y-4 text-sm">
+                                    <div className="flex justify-between border-b pb-2">
+                                        <span className="text-gray-600">Gigs Completed</span>
+                                        <span className="font-bold text-gray-900">0</span>
+                                    </div>
+                                    <div className="flex justify-between border-b pb-2">
+                                        <span className="text-gray-600">Rating</span>
+                                        <span className="font-bold text-gray-900">N/A</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Bid Modal */}
+            {bidModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg m-4">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4">Submit Your Bid</h3>
+                        <form onSubmit={handleBidSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Proposal / Cover Letter</label>
+                                <textarea required rows="4" value={bidProposal} onChange={e => setBidProposal(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Why are you the best fit for this gig..."></textarea>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Proposed Budget ($)</label>
+                                <input required type="number" min="1" value={bidAmount} onChange={e => setBidAmount(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 500" />
+                            </div>
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button type="button" onClick={() => setBidModalOpen(false)} className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Cancel</button>
+                                <button type="submit" className="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 shadow-sm rounded-lg transition-colors">Submit Bid</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}

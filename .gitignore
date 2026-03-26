@@ -1,0 +1,17 @@
+# Node
+node_modules/
+
+# Python
+venv_seed/
+venv/
+
+
+# Java
+target/
+
+# Cache
+__pycache__/
+*.pyc
+
+# Env
+.env
