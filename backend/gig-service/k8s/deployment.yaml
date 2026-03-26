@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gig-service-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gig-service
+  template:
+    metadata:
+      labels:
+        app: gig-service
+    spec:
+      containers:
+      - name: gig-service
+        image: yashodaadarsh/my-k8s-cicd-app:latest  # your Docker Hub image
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080

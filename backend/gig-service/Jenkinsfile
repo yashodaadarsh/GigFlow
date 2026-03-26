@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "yashodaadarsh/ml-service"
+        IMAGE_NAME = "yashodaadarsh/gig-service"
         GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
         GIT_BRANCH = "devops"
     }
@@ -16,12 +16,28 @@ pipeline {
             }
         }
 
+        stage('Build Artifact') {
+            steps {
+                dir('backend/gig-service') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                dir('backend/gig-service') {
+                    sh 'mvn test'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                dir('backend/ml-recommendation') {
+                dir('backend/gig-service') {
                     sh '''
-                    docker build -t ml-service:${BUILD_NUMBER} .
-                    docker tag ml-service:${BUILD_NUMBER} ${IMAGE_NAME}:${BUILD_NUMBER}
+                    docker build -t gig-service:${BUILD_NUMBER} .
+                    docker tag gig-service:${BUILD_NUMBER} ${IMAGE_NAME}:${BUILD_NUMBER}
                     '''
                 }
             }
@@ -45,7 +61,7 @@ pipeline {
 
         stage('Update Kubernetes Manifest') {
             steps {
-                dir('backend/ml-recommendation') {
+                dir('backend/gig-service') {
                     sh '''
                     sed -i "s|image: .*|image: ${IMAGE_NAME}:${BUILD_NUMBER}|g" k8s/deployment.yaml
                     '''
@@ -80,7 +96,7 @@ pipeline {
         //             sh '''
         //             export KUBECONFIG=$KUBECONFIG
         //             kubectl apply -f k8s/deployment.yaml
-        //             kubectl rollout status deployment/ml-service
+        //             kubectl rollout status deployment/gig-service
         //             '''
         //         }
         //     }
