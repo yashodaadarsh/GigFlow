@@ -1,0 +1,65 @@
+nohup: ignoring input
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-03-24T23:21:46.053+05:30  INFO 20013 --- [notification-service] [           main] c.f.n.NotificationServiceApplication     : Starting NotificationServiceApplication v0.0.1-SNAPSHOT using Java 21.0.7 with PID 20013 (/home/user/temp/MINI_2/GigFlow/backend/notification-service/target/demo-0.0.1-SNAPSHOT.jar started by user in /home/user/temp/MINI_2/GigFlow/backend)
+2026-03-24T23:21:46.065+05:30  INFO 20013 --- [notification-service] [           main] c.f.n.NotificationServiceApplication     : The following 1 profile is active: "dev"
+2026-03-24T23:21:50.181+05:30  INFO 20013 --- [notification-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-24T23:21:50.291+05:30  INFO 20013 --- [notification-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 85 ms. Found 0 JPA repository interfaces.
+2026-03-24T23:21:52.052+05:30  INFO 20013 --- [notification-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8083 (http)
+2026-03-24T23:21:52.108+05:30  INFO 20013 --- [notification-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-24T23:21:52.108+05:30  INFO 20013 --- [notification-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-24T23:21:52.219+05:30  INFO 20013 --- [notification-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 5634 ms
+2026-03-24T23:21:52.972+05:30  INFO 20013 --- [notification-service] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-24T23:21:53.203+05:30  INFO 20013 --- [notification-service] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-24T23:21:55.160+05:30  INFO 20013 --- [notification-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-24T23:21:55.290+05:30  INFO 20013 --- [notification-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-24T23:21:55.903+05:30  INFO 20013 --- [notification-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@70f98f7a
+2026-03-24T23:21:55.911+05:30  INFO 20013 --- [notification-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-24T23:21:56.221+05:30  INFO 20013 --- [notification-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/freelance_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.42
+	Default catalog/schema: freelance_notification/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-24T23:21:57.343+05:30  INFO 20013 --- [notification-service] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-24T23:21:57.363+05:30  INFO 20013 --- [notification-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-24T23:21:57.747+05:30  WARN 20013 --- [notification-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-24T23:21:57.810+05:30  WARN 20013 --- [notification-service] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: abb6f67f-b8e5-4537-a5b4-92e29ff2a880
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-24T23:21:57.824+05:30  INFO 20013 --- [notification-service] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-03-24T23:21:59.187+05:30  INFO 20013 --- [notification-service] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-03-24T23:21:59.188+05:30  INFO 20013 --- [notification-service] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14d513ca]]
+2026-03-24T23:21:59.192+05:30  INFO 20013 --- [notification-service] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-03-24T23:21:59.252+05:30  INFO 20013 --- [notification-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8083 (http) with context path '/'
+2026-03-24T23:21:59.295+05:30  INFO 20013 --- [notification-service] [           main] c.f.n.NotificationServiceApplication     : Started NotificationServiceApplication in 15.235 seconds (process running for 17.539)
+2026-03-24T23:22:55.973+05:30  INFO 20013 --- [notification-service] [nio-8083-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-24T23:22:55.976+05:30  INFO 20013 --- [notification-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-24T23:22:55.986+05:30  INFO 20013 --- [notification-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 10 ms
+2026-03-24T23:22:59.188+05:30  INFO 20013 --- [notification-service] [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[2 current WS(2)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(1)-CONNECTED(1)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 6, active threads = 0, queued tasks = 0, completed tasks = 6], outboundChannel[pool size = 1, active threads = 0, queued tasks = 0, completed tasks = 1], sockJsScheduler[pool size = 4, active threads = 1, queued tasks = 3, completed tasks = 1]
+2026-03-24T23:29:04.086+05:30  INFO 20013 --- [notification-service] [nio-8083-exec-1] o.s.w.s.m.SubProtocolWebSocketHandler    : No messages received after 156926 ms. Closing WebSocketServerSockJsSession[id=uksf5xcl].
+Sent notification to /topic/notifications/6: New bid placed on gig: React Developer
+Sent notification to /topic/notifications/5: New bid placed on gig: klkfsd
+Sent notification to /topic/notifications/5: New bid placed on gig: klkfsd
+2026-03-24T23:39:23.447+05:30  INFO 20013 --- [notification-service] [nio-8083-exec-6] o.s.w.s.m.SubProtocolWebSocketHandler    : No messages received after 400417 ms. Closing WebSocketServerSockJsSession[id=zusv03me].
+2026-03-24T23:39:23.461+05:30  INFO 20013 --- [notification-service] [nio-8083-exec-6] o.s.w.s.m.SubProtocolWebSocketHandler    : No messages received after 356204 ms. Closing WebSocketServerSockJsSession[id=ujhippin].
+Sent notification to /topic/notifications/8: New bid placed on gig: React Developer Needed
+2026-03-24T23:52:59.189+05:30  INFO 20013 --- [notification-service] [MessageBroker-2] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[2 current WS(2)-HttpStream(0)-HttpPoll(0), 16 total, 3 closed abnormally (3 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(8)-CONNECTED(8)-DISCONNECT(3)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 99], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 27], sockJsScheduler[pool size = 4, active threads = 1, queued tasks = 3, completed tasks = 506]
+Sent notification to /topic/notifications/10: New bid placed on gig: Gigflow 

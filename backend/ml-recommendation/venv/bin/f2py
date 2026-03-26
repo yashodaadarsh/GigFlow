@@ -1,4 +1,4 @@
-#!/home/yashoda-adarsh/Desktop/Mini_2/MINI_PROJECT2/freelancing-platform/backend/ml-recommendation/venv/bin/python3
+#!/home/user/temp/MINI_2/GigFlow/backend/ml-recommendation/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
