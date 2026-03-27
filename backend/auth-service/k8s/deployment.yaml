@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: auth-service
-        image: yashodaadarsh/auth-service:3
+        image: yashodaadarsh/auth-service:4
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
