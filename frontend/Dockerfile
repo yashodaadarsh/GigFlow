@@ -1,20 +1,16 @@
-FROM node:20-bookworm-slim
+
+FROM node:24-bookworm-slim
 
 WORKDIR /app
 
-# Install a simple static server
-RUN npm install -g serve
-
-# Copy package files and install deps
+# Copy package files and node_modules installed on host
 COPY frontend/package*.json ./
+
+# Install dependencies inside container
 RUN npm install
+#COPY node_modules ./node_modules
 
-# Copy source and build
+# Copy rest of the source code
 COPY frontend/ .
-RUN npm run build
 
-# Expose port
-EXPOSE 5173
-
-# Serve built app
-CMD ["serve", "-s", "dist", "-l", "5173"]
+CMD ["npm", "run", "dev"]
