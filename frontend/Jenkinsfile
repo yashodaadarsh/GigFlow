@@ -20,11 +20,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                docker build -t frontend-app:${BUILD_NUMBER} .
+                dir("frontend") {
+                    sh '''
+                    docker build -t frontend-app:${BUILD_NUMBER} .
 
-                docker tag frontend-app:${BUILD_NUMBER} yashodaadarsh/frontend-app:${BUILD_NUMBER}
-                '''
+                    docker tag frontend-app:${BUILD_NUMBER} yashodaadarsh/frontend-app:${BUILD_NUMBER}
+                    '''
+                }
             }
         }
 
@@ -62,7 +64,7 @@ pipeline {
 
         stage('Update Kubernetes Manifest') {
             steps {
-                dir("backend/${SERVICE}") {
+                dir("frontend") {
                     sh '''
                     sed -i "s|image: .*|image: ${IMAGE_NAME}:${BUILD_NUMBER}|g" k8s/deployment.yaml
                     '''
@@ -77,7 +79,7 @@ pipeline {
                     usernameVariable: 'GIT_USER',
                     passwordVariable: 'GIT_PASS'
                 )]) {
-                    dir("backend/${SERVICE}") {
+                    dir("frontend") {
                         sh '''
                         git config user.name "jenkins"
                         git config user.email "jenkins@example.com"
@@ -96,7 +98,7 @@ pipeline {
         stage('Apply Kubernetes Resources') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                    dir("backend/${SERVICE}") {
+                    dir("frontend") {
                         sh '''
                         export KUBECONFIG=$KUBECONFIG
 
