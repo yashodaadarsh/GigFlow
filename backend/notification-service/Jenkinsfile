@@ -101,16 +101,56 @@ pipeline {
             }
         }
 
-        // stage('Deploy to Kubernetes') {
-        //     steps {
-        //         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-        //             sh '''
-        //             export KUBECONFIG=$KUBECONFIG
-        //             kubectl apply -f k8s/deployment.yaml
-        //             kubectl rollout status deployment/auth-service
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Apply Kubernetes Resources') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    dir("backend/${SERVICE}") {
+                        sh '''
+                        export KUBECONFIG=$KUBECONFIG
+
+                        echo "Applying DB Secret..."
+                        kubectl apply -f k8s/dbsecret.yaml
+
+                        echo "Applying Service..."
+                        kubectl apply -f k8s/service.yaml
+
+                        echo "Applying Deployment..."
+                        kubectl apply -f k8s/deployment.yaml
+
+                        echo "Resources applied successfully"
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh '''
+                    export KUBECONFIG=$KUBECONFIG
+
+                    echo "Checking nodes..."
+                    kubectl get nodes
+
+                    echo "Checking pods..."
+                    kubectl get pods
+
+                    echo "Checking rollout..."
+                    kubectl rollout status deployment/${DEPLOYMENT_NAME}
+                    '''
+                }
+            }
+        }
     }
+
+    post {
+        success {
+            echo "✅ Deployment successful!"
+        }
+        failure {
+            echo "❌ Pipeline failed! Check logs."
+        }
+    }
+    
 }
