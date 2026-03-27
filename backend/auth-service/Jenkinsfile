@@ -8,7 +8,7 @@ pipeline {
     environment {
         IMAGE_NAME = "yashodaadarsh/auth-service"
         GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
-        GIT_BRANCH = "devops"
+        GIT_BRANCH = "auth-service"
         SERVICE = "auth-service"
     }
 
@@ -115,6 +115,6 @@ pipeline {
         //             '''
         //         }
         //     }
-        // }
+        // }//
     }
 }
