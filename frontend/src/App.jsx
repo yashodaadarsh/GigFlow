@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import VideoCall from './pages/VideoCall';
+import ProjectPipeline from './pages/ProjectPipeline';
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated } = useSelector((state) => state.auth);
@@ -52,6 +53,13 @@ function App() {
                 <Route path="/video-call/:bidderId" element={
                     <ProtectedRoute>
                         <VideoCall />
+                    </ProtectedRoute>
+                } />
+                <Route path="/project/:gigId" element={
+                    <ProtectedRoute>
+                        <DesktopLayout>
+                            <ProjectPipeline />
+                        </DesktopLayout>
                     </ProtectedRoute>
                 } />
                 

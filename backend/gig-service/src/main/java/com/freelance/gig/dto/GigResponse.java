@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @Builder
 public class GigResponse {
     private Long id;
+    private Long hirerId;          // postedBy - needed for bidder to initiate chat
+    private Long hiredBidderId;    // who was hired
     private String title;
     private String description;
     private java.util.List<String> skillsRequired;

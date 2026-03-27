@@ -22,6 +22,7 @@ export default function Dashboard() {
     const [recommendations, setRecommendations] = useState({});
     const [biddedGigs, setBiddedGigs] = useState([]);
     const [bidderNames, setBidderNames] = useState({});
+    const [hiringGig, setHiringGig] = useState(null); // { gigId, bidderId } loading state
 
     // Bidder Modal State
     const [bidModalOpen, setBidModalOpen] = useState(false);
@@ -80,6 +81,17 @@ export default function Dashboard() {
         } catch (err) {
             console.error('Failed to fetch bidded gigs', err);
         }
+    };
+
+    const hireForGig = async (gigId, bidderId) => {
+        setHiringGig({ gigId, bidderId });
+        try {
+            await api.post(`/gigs/${gigId}/hire/${bidderId}`);
+            alert(`✅ Hired! Bidder has been notified. View the project pipeline for next steps.`);
+            fetchGigs();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Hire action failed');
+        } finally { setHiringGig(null); }
     };
 
     useEffect(() => {
@@ -295,9 +307,18 @@ export default function Dashboard() {
                                                                 <div>
                                                                     <span className="font-semibold text-gray-900">{bidderNames[bid.bidderId] || `Bidder #${bid.bidderId}`}</span>
                                                                     <Link to={`/profile/${bid.bidderId}`} className="text-xs text-indigo-500 hover:underline ml-2">View Profile →</Link>
-                                                                    <p className="text-gray-600 mt-1">{bid.proposal}</p>
+                                                                     <p className="text-gray-600 mt-1">{bid.proposal}</p>
                                                                 </div>
-                                                                <div className="text-green-600 font-bold">${bid.budget}</div>
+                                                                <div className="flex flex-col items-end gap-2">
+                                                                    <div className="text-green-600 font-bold">${bid.budget}</div>
+                                                                    <button
+                                                                        onClick={() => hireForGig(gig.id, bid.bidderId)}
+                                                                        disabled={hiringGig?.gigId === gig.id && hiringGig?.bidderId === bid.bidderId}
+                                                                        className="text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg font-bold transition"
+                                                                    >
+                                                                        {hiringGig?.gigId === gig.id && hiringGig?.bidderId === bid.bidderId ? 'Hiring...' : '✓ Hire'}
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         ))}
                                                     </div>
