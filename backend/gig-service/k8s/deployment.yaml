@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: gig-service
-        image: yashodaadarsh/gig-service:3
+        image: yashodaadarsh/gig-service:1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
