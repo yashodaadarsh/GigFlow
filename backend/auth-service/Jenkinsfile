@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'maven-3.9'
+    }
+
     environment {
         IMAGE_NAME = "yashodaadarsh/auth-service"
         GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
