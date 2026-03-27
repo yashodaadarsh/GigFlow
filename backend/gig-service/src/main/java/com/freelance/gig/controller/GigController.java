@@ -11,10 +11,12 @@ import com.freelance.gig.service.GigService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/gigs")
@@ -80,12 +82,18 @@ public class GigController {
 
     /** Hirer hires a specific bidder for a gig */
     @PostMapping("/{gigId}/hire/{bidderId}")
-    public ResponseEntity<GigResponse> hireForGig(
+    public ResponseEntity<?> hireForGig(
             @PathVariable Long gigId,
             @PathVariable Long bidderId,
             HttpServletRequest httpRequest) {
         Long hirerId = extractUserId(httpRequest);
-        return ResponseEntity.ok(gigService.hireForGig(gigId, bidderId, hirerId));
+        try {
+            GigResponse response = gigService.hireForGig(gigId, bidderId, hirerId);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}/status")

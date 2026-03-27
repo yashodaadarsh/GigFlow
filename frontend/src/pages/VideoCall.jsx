@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
+import api from '../api/api';
 
-const COMM_URL = 'http://localhost:5000';
 const ICE_SERVERS = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
 export default function VideoCall() {
@@ -25,9 +25,8 @@ export default function VideoCall() {
 
     // Fetch peer info
     useEffect(() => {
-        fetch(`http://localhost:8081/api/auth/profile/${peerIdParam}`)
-            .then(r => r.json())
-            .then(setPeerProfile)
+        api.get(`/auth/profile/${peerIdParam}`)
+            .then(res => setPeerProfile(res.data))
             .catch(console.error);
     }, [peerIdParam]);
 
@@ -73,7 +72,7 @@ export default function VideoCall() {
     };
 
     const connectSocket = useCallback(() => {
-        const socket = io(COMM_URL);
+        const socket = io(); // Use the proxied path
         socketRef.current = socket;
 
         socket.on('connect', () => {
@@ -107,9 +106,9 @@ export default function VideoCall() {
     // On mount: check if there's a pending offer (callee joining after notification)
     useEffect(() => {
         if (!user) return;
-        fetch(`${COMM_URL}/api/video/pending-offer/${user.id}`)
-            .then(r => r.json())
-            .then(async ({ offer }) => {
+        api.get(`/video/pending-offer/${user.id}`)
+            .then(res => {
+                const { offer } = res.data;
                 if (offer) {
                     // There's a buffered offer — show "Answer Call" UI
                     pendingOfferRef.current = offer;

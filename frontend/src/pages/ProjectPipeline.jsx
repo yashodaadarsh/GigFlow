@@ -12,7 +12,7 @@ const STAGE_LABELS = {
     DELIVERED:       { label: 'Delivered',        icon: '🏁', color: 'green' },
 };
 
-const PAYMENT_URL = 'http://localhost:5001';
+// const PAYMENT_URL = 'http://localhost:5001'; (No longer needed, proxied via /api/payments)
 
 export default function ProjectPipeline() {
     const { gigId } = useParams();
@@ -37,8 +37,7 @@ export default function ProjectPipeline() {
 
     const fetchPayment = async () => {
         try {
-            const res = await fetch(`${PAYMENT_URL}/api/payments/gig/${gigId}`);
-            const data = await res.json();
+            const { data } = await api.get(`/payments/gig/${gigId}`);
             setPayment(data);
         } catch {}
     };
@@ -62,19 +61,13 @@ export default function ProjectPipeline() {
     const initiatePayment = async () => {
         setActionLoading(true);
         try {
-            const res = await fetch(`${PAYMENT_URL}/api/payments/create-order`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    gigId: gig.id,
-                    hirerId: user.id,
-                    bidderId: gig.hiredBidderId,
-                    amount: gig.budget,
-                    token,
-                }),
+            const { data: order } = await api.post('/payments/create-order', {
+                gigId: gig.id,
+                hirerId: user.id,
+                bidderId: gig.hiredBidderId,
+                amount: gig.budget,
+                token, // Explicitly pass token for payment-service body extraction
             });
-            const order = await res.json();
-
             if (order.mock) {
                 // Mock mode — auto-verify
                 setStatusMsg('Mock payment mode: auto-completing...');
@@ -95,20 +88,15 @@ export default function ProjectPipeline() {
                     name: 'GigFlow',
                     description: `Payment for: ${gig.title}`,
                     handler: async (response) => {
-                        await fetch(`${PAYMENT_URL}/api/payments/verify`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                razorpayOrderId: response.razorpay_order_id,
-                                razorpayPaymentId: response.razorpay_payment_id,
-                                razorpaySignature: response.razorpay_signature,
-                                gigId: gig.id,
-                                hirerId: user.id,
-                                bidderId: gig.hiredBidderId,
-                                token,
-                            }),
-                        });
-                        await fetchGig();
+                        await api.post('/payments/verify', {
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpaySignature: response.razorpay_signature,
+                            gigId: gig.id,
+                            hirerId: user.id,
+                            bidderId: gig.hiredBidderId,
+                            token, // Explicitly pass token
+                        });                        await fetchGig();
                         await fetchPayment();
                         setStatusMsg('🎉 Payment successful! Project delivered.');
                     },
@@ -122,21 +110,16 @@ export default function ProjectPipeline() {
 
     const verifyMockPayment = async (order) => {
         try {
-            await fetch(`${PAYMENT_URL}/api/payments/verify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    razorpayOrderId: order.orderId,
-                    razorpayPaymentId: `mock_pay_${Date.now()}`,
-                    razorpaySignature: 'mock',
-                    gigId: gig.id,
-                    hirerId: user.id,
-                    bidderId: gig.hiredBidderId,
-                    token,
-                    mock: true,
-                }),
-            });
-            await fetchGig();
+            await api.post('/payments/verify', {
+                razorpayOrderId: order.orderId,
+                razorpayPaymentId: `mock_pay_${Date.now()}`,
+                razorpaySignature: 'mock',
+                gigId: gig.id,
+                hirerId: user.id,
+                bidderId: gig.hiredBidderId,
+                token, // Explicitly pass token
+                mock: true,
+            });            await fetchGig();
             await fetchPayment();
             setStatusMsg('🎉 Mock payment complete! Project delivered.');
         } finally { setActionLoading(false); }
@@ -251,8 +234,8 @@ export default function ProjectPipeline() {
                         </button>
                     )}
 
-                    {/* ONGOING → COMPLETED: Either party can mark done */}
-                    {gig.status === 'ONGOING' && (
+                    {/* ONGOING → COMPLETED: Hirer can mark done (Bidders can only view) */}
+                    {gig.status === 'ONGOING' && isHirer && (
                         <button
                             onClick={() => advanceStage('COMPLETED')}
                             disabled={actionLoading}
@@ -260,6 +243,15 @@ export default function ProjectPipeline() {
                         >
                             ✅ Mark Work as Completed
                         </button>
+                    )}
+
+                    {/* Bidders view for ONGOING/ASSIGNED/COMPLETED */}
+                    {(gig.status === 'ASSIGNED' || gig.status === 'ONGOING' || gig.status === 'COMPLETED') && !isHirer && (
+                        <div className="text-center text-gray-500 text-sm py-3 border border-dashed border-gray-200 rounded-xl">
+                            {gig.status === 'ASSIGNED' && '⌛ Waiting for hirer to start the work...'}
+                            {gig.status === 'ONGOING' && '🚀 Project is currently in progress...'}
+                            {gig.status === 'COMPLETED' && '⏳ Work completed! Waiting for hirer to process payment...'}
+                        </div>
                     )}
 
                     {/* COMPLETED → PAYMENT: Hirer initiates payment */}

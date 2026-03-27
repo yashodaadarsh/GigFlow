@@ -87,8 +87,8 @@ export default function Dashboard() {
         setHiringGig({ gigId, bidderId });
         try {
             await api.post(`/gigs/${gigId}/hire/${bidderId}`);
-            alert(`✅ Hired! Bidder has been notified. View the project pipeline for next steps.`);
-            fetchGigs();
+            // Navigate directly to the project pipeline
+            navigate(`/project/${gigId}`);
         } catch (err) {
             alert(err.response?.data?.message || 'Hire action failed');
         } finally { setHiringGig(null); }
@@ -369,14 +369,22 @@ export default function Dashboard() {
                                                                     {statusIcons[gig.status] || '📋'} {gig.status || 'UNKNOWN'}
                                                                 </span>
                                                                 {/* Chat with Hirer button - visible when accepted/ongoing */}
-                                                                {(gig.status === 'ACCEPTED' || gig.status === 'ONGOING') && gig.hirerId && (
-                                                                    <button
-                                                                        onClick={() => navigate(`/chat/${gig.hirerId}`)}
-                                                                        className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
-                                                                    >
-                                                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                                                                        Chat with Hirer
-                                                                    </button>
+                                                                {(gig.status === 'ACCEPTED' || gig.status === 'ONGOING' || gig.status === 'ASSIGNED' || gig.status === 'COMPLETED' || gig.status === 'PAYMENT_PENDING' || gig.status === 'DELIVERED') && gig.hirerId && (
+                                                                    <div className="flex gap-2">
+                                                                        <button
+                                                                            onClick={() => navigate(`/project/${gig.id}`)}
+                                                                            className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
+                                                                        >
+                                                                            📈 View Pipeline
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => navigate(`/chat/${gig.hirerId}`)}
+                                                                            className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
+                                                                        >
+                                                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                                                                            Chat
+                                                                        </button>
+                                                                    </div>
                                                                 )}
                                                             </div>
                                                         </div>

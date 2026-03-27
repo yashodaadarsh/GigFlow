@@ -57,7 +57,11 @@ app.get('/api/health', (req, res) => res.json({ status: 'Payment Service running
  * Creates a Razorpay order and returns {orderId, amount, currency, key}
  */
 app.post('/api/payments/create-order', async (req, res) => {
-  const { gigId, hirerId, bidderId, amount, token } = req.body;
+  let { gigId, hirerId, bidderId, amount, token } = req.body;
+  // If token not in body, try to extract from Authorization header
+  if (!token && req.headers.authorization) {
+    token = req.headers.authorization.split(' ')[1];
+  }
   try {
     // Record payment intent
     let payment = await Payment.findOne({ where: { gig_id: String(gigId), status: 'PENDING' } });
@@ -114,8 +118,12 @@ app.post('/api/payments/create-order', async (req, res) => {
  * Verifies HMAC, marks payment PAID, advances gig to DELIVERED
  */
 app.post('/api/payments/verify', async (req, res) => {
-  const { razorpayOrderId, razorpayPaymentId, razorpaySignature, gigId, hirerId, bidderId, token, mock } = req.body;
+  let { razorpayOrderId, razorpayPaymentId, razorpaySignature, gigId, hirerId, bidderId, token, mock } = req.body;
   try {
+    // If token not in body, try to extract from Authorization header
+    if (!token && req.headers.authorization) {
+      token = req.headers.authorization.split(' ')[1];
+    }
     let isValid = false;
 
     if (mock) {

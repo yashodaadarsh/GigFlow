@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
-
-const COMM_URL = 'http://localhost:5000';
+import api from '../api/api';
 
 export default function Chat() {
     const { bidderId } = useParams();
@@ -21,9 +20,8 @@ export default function Chat() {
 
     // Fetch bidder profile for display
     useEffect(() => {
-        fetch(`http://localhost:8081/api/auth/profile/${bidderId}`)
-            .then(r => r.json())
-            .then(setBidderProfile)
+        api.get(`/auth/profile/${bidderId}`)
+            .then(res => setBidderProfile(res.data))
             .catch(console.error);
     }, [bidderId]);
 
@@ -38,23 +36,18 @@ export default function Chat() {
     // Get or create a chat room
     useEffect(() => {
         if (!user) return;
-        fetch(`${COMM_URL}/api/chat/rooms`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                gig_id: 0,
-                hirer_id: actualHirerId,
-                bidder_id: actualBidderId,
-                hirer_name: isHirer ? user.name : undefined,
-            }),
+        api.post('/chat/rooms', {
+            gig_id: 0,
+            hirer_id: actualHirerId,
+            bidder_id: actualBidderId,
+            hirer_name: isHirer ? user.name : undefined,
         })
-            .then(r => r.json())
-            .then(roomData => {
+            .then(res => {
+                const roomData = res.data;
                 setRoom(roomData);
-                return fetch(`${COMM_URL}/api/chat/rooms/${roomData.id}/messages`);
+                return api.get(`/chat/rooms/${roomData.id}/messages`);
             })
-            .then(r => r.json())
-            .then(setMessages)
+            .then(res => setMessages(res.data))
             .catch(console.error);
     }, [user, bidderId]);
 
@@ -62,7 +55,7 @@ export default function Chat() {
     useEffect(() => {
         if (!room) return;
 
-        const socket = io(COMM_URL);
+        const socket = io(); // Connects to the same origin through the Vite proxy
         socketRef.current = socket;
 
         socket.on('connect', () => {
