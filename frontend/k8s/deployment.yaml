@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fontend-app
+      app: frontend-app
   template:
     metadata:
       labels:
-        app: fontend-app
+        app: frontend-app
     spec:
       containers:
-      - name: fontend-app
-        image: yashodaadarsh/my-k8s-cicd-app:latest  # your Docker Hub image
+      - name: frontend-app
+        image: yashodaadarsh/frontend-app:latest
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8080
+        - containerPort: 5173
