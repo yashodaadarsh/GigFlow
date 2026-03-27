@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ml-service-service-deployment
+  name: ml-service
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: ml-service
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 32000

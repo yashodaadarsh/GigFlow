@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gig-service-service-deployment
+  name: gig-service
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: gig-service
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 32000
