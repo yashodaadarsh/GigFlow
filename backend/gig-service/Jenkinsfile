@@ -6,6 +6,7 @@ pipeline {
         GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
         GIT_BRANCH = "devops"
         SERVICE = "gig-service"
+        DEPLOYMENT_NAME = "gig-service-app-deployment"
     }
 
     stages {

@@ -6,6 +6,7 @@ pipeline {
         GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
         GIT_BRANCH = "devops"
         SERVICE = "ml-recommendation"
+        DEPLOYMENT_NAME = "ml-service-app-deployment"
     }
 
     stages {

@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "yashodaadarsh/notification-service"
+        IMAGE_NAME = "yashodaadarsh/frontend-service"
         GIT_REPO = "https://github.com/yashodaadarsh/GigFlow.git"
         GIT_BRANCH = "devops"
-        SERVICE = "notification-service"
-        DEPLOYMENT_NAME = "notification-service-app-deployment"
+        SERVICE = "frontend"
+        DEPLOYMENT_NAME = "frontend-app-deployment"
     }
 
     stages {
@@ -18,22 +18,13 @@ pipeline {
             }
         }
 
-        stage('Build Artifact') {
-            steps {
-                dir("backend/${SERVICE}") {
-                    sh 'mvn clean package -DskipTests'
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                dir("backend/${SERVICE}") {
-                    sh '''
-                    docker build -t ${SERVICE}:${BUILD_NUMBER} .
-                    docker tag ${SERVICE}:${BUILD_NUMBER} ${IMAGE_NAME}:${BUILD_NUMBER}
-                    '''
-                }
+                sh '''
+                docker build -t frontend-app:${BUILD_NUMBER} .
+
+                docker tag frontend-app:${BUILD_NUMBER} yashodaadarsh/frontend-app:${BUILD_NUMBER}
+                '''
             }
         }
 
