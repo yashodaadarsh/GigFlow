@@ -1,12 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { logout } from '../redux/slices/auth.slice';
-import { LogOut, User, Menu } from 'lucide-react';
+import { LogOut, User, Menu, Bell, Search } from 'lucide-react';
+import NotificationModal from './NotificationModal';
 
 export default function Navbar() {
   const { isAuthenticated, user } = useSelector(state => state.auth);
+  const { unreadCount } = useSelector(state => state.notifications);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showNotifs, setShowNotifs] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -25,17 +29,35 @@ export default function Navbar() {
               GigFlow
             </Link>
           </div>
+          
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Home</Link>
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Dashboard</Link>
                 <div className="flex items-center gap-4 ml-4 border-l pl-4 border-gray-300">
-                  <Link to={`/profile/${user?.id}`} className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-blue-600">
-                    <User size={18} />
+                  {/* Notification Bell */}
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowNotifs(!showNotifs)}
+                      className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all relative"
+                    >
+                      <Bell size={20} />
+                      {unreadCount > 0 && (
+                        <span className="absolute top-1 right-1 w-5 h-5 bg-red-600 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
+                    </button>
+                    <NotificationModal isOpen={showNotifs} onClose={() => setShowNotifs(false)} />
+                  </div>
+
+                  <Link to={`/profile/${user?.id}`} className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-blue-600 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100 transition-all">
+                    <User size={18} className="text-blue-600" />
                     <span>{user?.name}</span>
                   </Link>
-                  <button onClick={handleLogout} className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+
+                  <button onClick={handleLogout} className="flex items-center gap-2 bg-gray-900 hover:bg-black text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-gray-200">
                     <LogOut size={16} /> Logout
                   </button>
                 </div>
@@ -47,6 +69,7 @@ export default function Navbar() {
               </div>
             )}
           </div>
+          
           <div className="md:hidden flex items-center">
             <button className="p-2 text-gray-600 hover:text-gray-900 focus:outline-none">
               <Menu size={24} />

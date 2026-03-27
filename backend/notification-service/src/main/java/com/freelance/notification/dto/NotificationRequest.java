@@ -6,4 +6,6 @@ import lombok.Data;
 public class NotificationRequest {
     private Long userId;
     private String message;
+    private String type;
+    private Long relatedId;
 }

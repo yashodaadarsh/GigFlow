@@ -15,15 +15,21 @@ public class NotificationClient {
     @Value("${notification.service.url}")
     private String notificationServiceUrl;
 
-    public void sendNotification(Long userId, String message) {
+    public void sendNotification(Long userId, String message, String type, Long relatedId) {
         try {
             String url = notificationServiceUrl + "/api/notifications/notify";
             Map<String, Object> payload = new HashMap<>();
             payload.put("userId", userId);
             payload.put("message", message);
+            payload.put("type", type);
+            payload.put("relatedId", relatedId);
             restTemplate.postForEntity(url, payload, Void.class);
         } catch (Exception e) {
             System.err.println("Failed to send notification: " + e.getMessage());
         }
+    }
+
+    public void sendNotification(Long userId, String message) {
+        sendNotification(userId, message, "INFO", null);
     }
 }

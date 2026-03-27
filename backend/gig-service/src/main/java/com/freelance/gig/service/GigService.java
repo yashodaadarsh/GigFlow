@@ -92,8 +92,12 @@ public class GigService {
         Gig saved = gigRepository.save(gig);
 
         // Notify bidder they've been hired
-        notificationClient.sendNotification(bidderId,
-                "🎉 Congratulations! You've been hired for: " + gig.getTitle());
+        notificationClient.sendNotification(
+                bidderId,
+                "🎉 Congratulations! You've been hired for: " + gig.getTitle(),
+                "HIRED",
+                gigId
+        );
 
         return mapToResponse(saved);
     }
