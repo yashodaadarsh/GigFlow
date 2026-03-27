@@ -21,4 +21,4 @@ spec:
 
         envFrom:
         - secretRef:
-            name: auth-db-secret
+            name: db-secret
