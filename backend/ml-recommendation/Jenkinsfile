@@ -85,6 +85,8 @@ pipeline {
                         git add k8s/deployment.yaml
 
                         git commit -m "Updated image to ${BUILD_NUMBER}" || echo "No changes to commit"
+                        
+                        git pull origin ${GIT_BRANCH} --rebase
 
                         git push https://${GIT_USER}:${GIT_PASS}@github.com/yashodaadarsh/GigFlow.git ${GIT_BRANCH}
                         '''
