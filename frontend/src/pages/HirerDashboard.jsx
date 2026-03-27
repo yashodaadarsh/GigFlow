@@ -24,11 +24,17 @@ export default function HirerDashboard() {
     fetchMyGigs();
   }, []);
 
+  const stats = {
+    posted: myGigs.length,
+    ongoing: myGigs.filter(g => ['ASSIGNED', 'ONGOING'].includes(g.status)).length,
+    completed: myGigs.filter(g => ['COMPLETED', 'DELIVERED'].includes(g.status)).length
+  };
+
   return (
     <DashboardLayout>
       <Routes>
         <Route index element={<Navigate to="profile" replace />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="profile" element={<Profile stats={stats} />} />
         <Route path="post-gig" element={<PostGigForm onGigPosted={fetchMyGigs} />} />
         <Route path="my-gigs" element={
           <div className="space-y-6">

@@ -12,11 +12,12 @@ export default function GigBidsPage() {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hiringId, setHiringId] = useState(null);
+  const { list: notifications } = useSelector(state => state.notifications);
 
   const fetchData = async () => {
     try {
       const [gigRes, bidsRes, recsRes] = await Promise.all([
-        api.get(`/gigs/my-gigs`), // Fetching all and finding one since there isn't a direct /gigs/:id yet or use existing if any
+        api.get(`/gigs/my-gigs`), 
         api.get(`/gigs/${gigId}/bids`),
         api.get(`/gigs/${gigId}/recommendations`)
       ]);
@@ -34,6 +35,14 @@ export default function GigBidsPage() {
   useEffect(() => {
     fetchData();
   }, [gigId]);
+
+  // Real-time refresh when a new bid notification arrives for this gig
+  useEffect(() => {
+    const latestNotif = notifications[0];
+    if (latestNotif?.type === 'NEW_BID' && String(latestNotif?.relatedId) === String(gigId)) {
+      fetchData();
+    }
+  }, [notifications]);
 
   const handleHire = async (bidderId) => {
     setHiringId(bidderId);

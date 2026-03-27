@@ -127,7 +127,12 @@ public class GigService {
                 .budget(request.getBudget())
                 .build();
         bidRepository.save(bid);
-        notificationClient.sendNotification(gig.getPostedBy(), "New bid on gig: " + gig.getTitle());
+        notificationClient.sendNotification(
+            gig.getPostedBy(), 
+            "New bid on gig: " + gig.getTitle(),
+            "NEW_BID",
+            gigId
+        );
     }
 
     public List<Bid> getBidsForGig(Long gigId) {

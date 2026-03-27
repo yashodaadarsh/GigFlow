@@ -1,14 +1,20 @@
 import { Phone, PhoneOff, Video } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearIncomingCall } from '../redux/slices/notifications.slice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { io } from 'socket.io-client';
 
 export default function IncomingCallModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { incomingCall } = useSelector(state => state.notifications);
+  const { user } = useSelector(state => state.auth);
 
-  if (!incomingCall) return null;
+  if (!incomingCall || !user || String(incomingCall.callerId) === String(user.id)) return null;
+
+  // Don't show modal if already in a call
+  if (location.pathname.startsWith('/video-call')) return null;
 
   const handleAccept = () => {
     const roomId = incomingCall.roomId;
@@ -17,8 +23,10 @@ export default function IncomingCallModal() {
   };
 
   const handleReject = () => {
+    const socket = io();
+    socket.emit('video-decline', { target: incomingCall.callerId });
+    setTimeout(() => socket.disconnect(), 1000);
     dispatch(clearIncomingCall());
-    // Optionally notify the caller
   };
 
   return (

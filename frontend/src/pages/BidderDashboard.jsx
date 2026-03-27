@@ -30,11 +30,17 @@ export default function BidderDashboard() {
     fetchData();
   }, []);
 
+  const stats = {
+    bids: myBids.length,
+    accepted: myBids.filter(b => ['ASSIGNED', 'HIRED', 'ONGOING', 'COMPLETED', 'DELIVERED'].includes(b.status)).length,
+    ongoing: myBids.filter(b => ['ASSIGNED', 'ONGOING', 'PAYMENT_PENDING'].includes(b.status)).length
+  };
+
   return (
     <DashboardLayout>
       <Routes>
         <Route index element={<Navigate to="profile" replace />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="profile" element={<Profile stats={stats} />} />
         <Route path="find-gigs" element={
           <div className="space-y-6">
             <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Available Gigs</h2>

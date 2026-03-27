@@ -37,8 +37,7 @@ function App() {
 
         dispatch(fetchNotifications(user.id));
 
-        const socket = new SockJS('http://localhost:8083/ws');
-        const stompClient = Stomp.over(socket);
+        const stompClient = Stomp.over(() => new SockJS('http://localhost:8083/ws'));
         stompClient.debug = () => {}; // Silence debug logs
         
         stompClient.connect({}, () => {
@@ -47,21 +46,23 @@ function App() {
                     const parsed = JSON.parse(msg.body);
                     const notif = typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
                     
-                    // Dispatch to Redux
+                    // Dispatch to Redux for history
                     dispatch(addNotification({
                         ...notif,
-                        id: Date.now(),
-                        createdAt: new Date().toISOString(),
+                        id: notif.id || Date.now(),
+                        createdAt: notif.createdAt || new Date().toISOString(),
                         isRead: false
                     }));
 
                     // Special handling for video calls
-                    if (notif.type === 'INCOMING_VIDEO_CALL') {
+                    if (notif.type === 'VIDEO_CALL') {
                         dispatch(setIncomingCall({
-                            callerId: notif.callerId,
+                            callerId: notif.relatedId,
                             callerName: notif.callerName || 'Someone',
-                            roomId: notif.roomId
+                            roomId: notif.roomId || `room-${notif.relatedId}`
                         }));
+                    } else if (notif.type === 'CANCEL_CALL') {
+                        dispatch(setIncomingCall(null));
                     }
                 } catch (e) {
                     dispatch(addNotification({

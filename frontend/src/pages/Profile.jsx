@@ -3,10 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import api from '../api/api';
 
-export default function Profile() {
+export default function Profile({ stats }) {
     // currentUser from Redux: { id (Number), name (String), role (String: "HIRER"|"BIDDER") }
     const { user: currentUser } = useSelector(state => state.auth);
-    const { id } = useParams();
+    const { id: urlId } = useParams();
+    const profileId = urlId || currentUser?.id;
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -14,14 +15,21 @@ export default function Profile() {
     const [hireStatus, setHireStatus] = useState(null); // null | 'hiring' | 'hired' | 'error'
 
     useEffect(() => {
-        fetch(`http://localhost:8081/api/auth/profile/${id}`)
+        if (!profileId) {
+            setError("No user ID found");
+            setLoading(false);
+            return;
+        }
+        api.get(`/auth/profile/${profileId}`)
             .then(res => {
-                if (!res.ok) throw new Error('User not found');
-                return res.json();
+                setProfile(res.data);
+                setLoading(false);
             })
-            .then(data => { setProfile(data); setLoading(false); })
-            .catch(err => { setError(err.message); setLoading(false); });
-    }, [id]);
+            .catch(err => {
+                setError(err.response?.data?.message || err.message || 'User not found');
+                setLoading(false);
+            });
+    }, [profileId]);
 
     const handleHire = async () => {
         setHireStatus('hiring');
@@ -117,17 +125,29 @@ export default function Profile() {
                         {/* Stats Row */}
                         <div className="grid grid-cols-3 gap-4 mb-6">
                             <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl p-4 text-center">
-                                <div className="text-2xl font-extrabold text-indigo-700">{profile.completedGigs ?? 0}</div>
-                                <div className="text-xs text-indigo-500 font-medium mt-1">Gigs Completed</div>
+                                <div className="text-2xl font-extrabold text-indigo-700">
+                                  {stats ? (profileRole === 'HIRER' ? stats.posted : stats.bids) : (profile.completedGigs ?? 0)}
+                                </div>
+                                <div className="text-xs text-indigo-500 font-medium mt-1">
+                                  {stats ? (profileRole === 'HIRER' ? 'Gigs Posted' : 'Bids Placed') : 'Gigs Completed'}
+                                </div>
                             </div>
                             <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-4 text-center">
-                                <div className="text-2xl font-extrabold text-yellow-600">{(profile.rating ?? 0).toFixed(1)}</div>
-                                <div className="text-xs text-yellow-500 font-medium mt-1">Rating</div>
-                                <div className="text-yellow-400 text-sm">{getRatingStars(profile.rating)}</div>
+                                <div className="text-2xl font-extrabold text-yellow-600">
+                                  {stats ? stats.ongoing : (profile.rating ?? 0).toFixed(1)}
+                                </div>
+                                <div className="text-xs text-yellow-500 font-medium mt-1">
+                                  {stats ? 'Ongoing' : 'Rating'}
+                                </div>
+                                {!stats && <div className="text-yellow-400 text-sm">{getRatingStars(profile.rating)}</div>}
                             </div>
                             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-4 text-center">
-                                <div className="text-2xl font-extrabold text-green-700">{profile.skills?.length ?? 0}</div>
-                                <div className="text-xs text-green-500 font-medium mt-1">Skills</div>
+                                <div className="text-2xl font-extrabold text-green-700">
+                                  {stats ? stats.completed : (profile.skills?.length ?? 0)}
+                                </div>
+                                <div className="text-xs text-green-500 font-medium mt-1">
+                                  {stats ? 'Completed' : 'Skills'}
+                                </div>
                             </div>
                         </div>
 

@@ -1,5 +1,6 @@
 import { X, Bell, CheckCircle, Info, MessageSquare, Video } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { markAllRead } from '../redux/slices/notifications.slice';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -7,11 +8,23 @@ export default function NotificationModal({ isOpen, onClose }) {
   const dispatch = useDispatch();
   const { list } = useSelector(state => state.notifications);
   const { user } = useSelector(state => state.auth);
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
   const handleMarkAllRead = () => {
     dispatch(markAllRead(user.id));
+  };
+
+  const handleNotificationClick = (n) => {
+    onClose();
+    if (n.type === 'CHAT') {
+      navigate(`/chat/${n.relatedId}`);
+    } else if (n.type === 'VIDEO_CALL') {
+      navigate(`/video-call/${n.relatedId}`);
+    } else if (n.type === 'HIRED' || n.type === 'STATUS_UPDATE') {
+      navigate(`/project/${n.relatedId}`);
+    }
   };
 
   const getIcon = (type) => {
@@ -48,7 +61,8 @@ export default function NotificationModal({ isOpen, onClose }) {
             {list.map((n) => (
               <div 
                 key={n.id} 
-                className={`p-4 hover:bg-gray-50 transition-colors flex gap-3 ${!n.isRead ? 'bg-indigo-50/30' : ''}`}
+                onClick={() => handleNotificationClick(n)}
+                className={`p-4 hover:bg-gray-50 transition-colors flex gap-3 cursor-pointer ${!n.isRead ? 'bg-indigo-50/30' : ''}`}
               >
                 <div className="mt-1">{getIcon(n.type)}</div>
                 <div className="flex-1">

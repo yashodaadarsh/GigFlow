@@ -22,7 +22,7 @@ export default function MyBiddedGigs({ biddedGigs, filter = 'ALL' }) {
 
   const filteredGigs = biddedGigs.filter(gig => {
     if (filter === 'ALL') return true;
-    if (filter === 'OPEN') return gig.status === 'PENDING' || gig.status === 'SHORTLISTED';
+    if (filter === 'OPEN') return gig.status === 'OPEN';
     return gig.status === filter;
   });
 
