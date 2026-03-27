@@ -102,9 +102,6 @@ pipeline {
                         sh '''
                         export KUBECONFIG=$KUBECONFIG
 
-                        echo "Applying DB Secret..."
-                        kubectl apply -f k8s/dbsecret.yaml
-
                         echo "Applying Service..."
                         kubectl apply -f k8s/service.yaml
 
@@ -146,5 +143,5 @@ pipeline {
             echo "❌ Pipeline failed! Check logs."
         }
     }
-    
+
 }
