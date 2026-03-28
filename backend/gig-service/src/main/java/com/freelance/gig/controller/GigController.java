@@ -32,7 +32,10 @@ public class GigController {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String jwt = authHeader.substring(7);
             Claims claims = jwtService.extractAllClaims(jwt);
-            return claims.get("userId", Long.class);
+            Object userId = claims.get("userId");
+            if (userId != null) {
+                return Long.valueOf(userId.toString());
+            }
         }
         return -1L;
     }

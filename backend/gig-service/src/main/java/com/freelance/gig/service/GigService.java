@@ -92,8 +92,12 @@ public class GigService {
         Gig saved = gigRepository.save(gig);
 
         // Notify bidder they've been hired
-        notificationClient.sendNotification(bidderId,
-                "🎉 Congratulations! You've been hired for: " + gig.getTitle());
+        notificationClient.sendNotification(
+                bidderId,
+                "🎉 Congratulations! You've been hired for: " + gig.getTitle(),
+                "HIRED",
+                gigId
+        );
 
         return mapToResponse(saved);
     }
@@ -123,7 +127,12 @@ public class GigService {
                 .budget(request.getBudget())
                 .build();
         bidRepository.save(bid);
-        notificationClient.sendNotification(gig.getPostedBy(), "New bid on gig: " + gig.getTitle());
+        notificationClient.sendNotification(
+            gig.getPostedBy(), 
+            "New bid on gig: " + gig.getTitle(),
+            "NEW_BID",
+            gigId
+        );
     }
 
     public List<Bid> getBidsForGig(Long gigId) {

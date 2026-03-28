@@ -1,41 +1,115 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import DesktopLayout from './components/Layout/DesktopLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
+import HirerDashboard from './pages/HirerDashboard';
+import BidderDashboard from './pages/BidderDashboard';
+import GigBidsPage from './pages/GigBidsPage';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import VideoCall from './pages/VideoCall';
-import ProjectPipeline from './pages/ProjectPipeline';
+import GigPipeline from './pages/GigPipeline';
+import IncomingCallModal from './components/IncomingCallModal';
+import { addNotification, setIncomingCall, fetchNotifications } from './redux/slices/notifications.slice';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated } = useSelector((state) => state.auth);
     return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
+const DashboardRouter = () => {
+    const { user } = useSelector((state) => state.auth);
+    if (user?.role === 'HIRER') return <HirerDashboard />;
+    return <BidderDashboard />;
+};
+
 function App() {
+    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!isAuthenticated || !user) return;
+
+        dispatch(fetchNotifications(user.id));
+
+        const stompClient = Stomp.over(() => new SockJS('/ws'));
+        stompClient.debug = () => {}; // Silence debug logs
+        
+        stompClient.connect({}, () => {
+            stompClient.subscribe(`/topic/notifications/${user.id}`, (msg) => {
+                try {
+                    const parsed = JSON.parse(msg.body);
+                    const notif = typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
+                    
+                    // Dispatch to Redux for history
+                    dispatch(addNotification({
+                        ...notif,
+                        id: notif.id || Date.now(),
+                        createdAt: notif.createdAt || new Date().toISOString(),
+                        isRead: false
+                    }));
+
+                    // Special handling for video calls
+                    if (notif.type === 'VIDEO_CALL') {
+                        dispatch(setIncomingCall({
+                            callerId: notif.relatedId,
+                            callerName: notif.callerName || 'Someone',
+                            roomId: notif.roomId || `room-${notif.relatedId}`
+                        }));
+                    } else if (notif.type === 'CANCEL_CALL') {
+                        dispatch(setIncomingCall(null));
+                    }
+                } catch (e) {
+                    dispatch(addNotification({
+                        message: msg.body,
+                        type: 'INFO',
+                        id: Date.now(),
+                        createdAt: new Date().toISOString(),
+                        isRead: false
+                    }));
+                }
+            });
+        });
+
+        return () => {
+            if (stompClient) stompClient.disconnect();
+        };
+    }, [isAuthenticated, user, dispatch]);
+
     return (
         <Router>
+            <IncomingCallModal />
             <Routes>
                 {/* Public Hero Page */}
                 <Route path="/" element={<DesktopLayout><Home /></DesktopLayout>} />
                 
-                {/* Auth Pages (No layout wrapper) */}
+                {/* Auth Pages */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 
-                {/* Protected Dashboard */}
-                <Route path="/dashboard" element={
+                {/* Dashboard Root */}
+                <Route path="/dashboard/*" element={
                     <ProtectedRoute>
                         <DesktopLayout>
-                            <Dashboard />
+                            <DashboardRouter />
+                        </DesktopLayout>
+                    </ProtectedRoute>
+                } />
+
+                {/* Specific Gig Bids Page (Hirer Only) */}
+                <Route path="/dashboard/gig/:gigId" element={
+                    <ProtectedRoute>
+                        <DesktopLayout>
+                            <GigBidsPage />
                         </DesktopLayout>
                     </ProtectedRoute>
                 } />
                 
-                {/* Profile Page - accessible to logged-in users */}
                 <Route path="/profile/:id" element={
                     <ProtectedRoute>
                         <DesktopLayout>
@@ -44,21 +118,20 @@ function App() {
                     </ProtectedRoute>
                 } />
 
-                {/* Communication Pages - full screen, no layout chrome */}
-                <Route path="/chat/:bidderId" element={
+                <Route path="/chat/:nodeId" element={
                     <ProtectedRoute>
                         <Chat />
                     </ProtectedRoute>
                 } />
-                <Route path="/video-call/:bidderId" element={
+                <Route path="/video-call/:nodeId" element={
                     <ProtectedRoute>
                         <VideoCall />
                     </ProtectedRoute>
                 } />
-                <Route path="/project/:gigId" element={
+                <Route path="/gig-pipeline/:gigId" element={
                     <ProtectedRoute>
                         <DesktopLayout>
-                            <ProjectPipeline />
+                            <GigPipeline />
                         </DesktopLayout>
                     </ProtectedRoute>
                 } />

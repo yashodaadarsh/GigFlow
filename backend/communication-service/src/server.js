@@ -25,9 +25,14 @@ const NOTIFICATION_URL = process.env.NOTIFICATION_SERVICE_URL || 'http://localho
 const connectedUsers = new Map();    // userId -> socketId
 const pendingOffers = new Map();     // targetUserId -> offer payload (buffered until they join)
 
-async function pushNotification(userId, message) {
+async function pushNotification(userId, message, type = 'INFO', relatedId = null) {
   try {
-    await axios.post(`${NOTIFICATION_URL}/api/notifications/notify`, { userId, message });
+    await axios.post(`${NOTIFICATION_URL}/api/notifications/notify`, { 
+      userId, 
+      message, 
+      type, 
+      relatedId: String(relatedId) 
+    });
   } catch (err) {
     console.warn('[Notification unreachable]', err.message);
   }
@@ -52,14 +57,9 @@ app.post('/api/chat/rooms', async (req, res) => {
         bidder_id: String(bidder_id),
       });
     }
-    if (isNew) {
-      await pushNotification(bidder_id, JSON.stringify({
-        type: 'CHAT_REQUEST',
-        message: `${hirer_name || 'A Hirer'} wants to chat with you!`,
-        hirerId: String(hirer_id),   // bidder uses this to navigate to /chat/:hirerId
-        roomId: room.id,
-      }));
-    }
+      if (isNew) {
+        await pushNotification(bidder_id, `${hirer_name || 'A Hirer'} wants to chat with you!`, 'CHAT', hirer_id);
+      }
     res.status(200).json(room);
   } catch (error) {
     console.error(error);
@@ -130,14 +130,7 @@ io.on('connection', (socket) => {
         const isFromHirer = String(sender_id) === String(room.hirer_id);
         const otherId = isFromHirer ? room.bidder_id : room.hirer_id;
 
-        await pushNotification(otherId, JSON.stringify({
-          type: 'NEW_MESSAGE',
-          message: `You have a new message!`,
-          // Always include hirerId so bidder can navigate to /chat/:hirerId
-          hirerId: String(room.hirer_id),
-          senderId: String(sender_id),
-          roomId: room_id,
-        }));
+        await pushNotification(otherId, `You have a new message!`, 'CHAT', sender_id);
       }
       io.to(room_id).emit('receive-message', msg);
     } catch (err) {
@@ -161,16 +154,24 @@ io.on('connection', (socket) => {
     }
 
     // Notify via STOMP regardless (may not be on the video page yet)
-    await pushNotification(targetId, JSON.stringify({
-      type: 'INCOMING_VIDEO_CALL',
-      message: `📹 Incoming video call!`,
-      callerId: callerId,
-    }));
+    await pushNotification(targetId, `📹 Incoming video call!`, 'VIDEO_CALL', callerId);
   });
 
   socket.on('video-answer', (payload) => {
     const targetSocketId = connectedUsers.get(String(payload.target));
     if (targetSocketId) io.to(targetSocketId).emit('video-answer', payload);
+  });
+
+  socket.on('video-decline', async (payload) => {
+    const targetSocketId = connectedUsers.get(String(payload.target));
+    if (targetSocketId) io.to(targetSocketId).emit('video-decline', payload);
+    await pushNotification(payload.target, `Call Declined`, 'CANCEL_CALL', socket.userId);
+  });
+
+  socket.on('video-hangup', async (payload) => {
+    const targetSocketId = connectedUsers.get(String(payload.target));
+    if (targetSocketId) io.to(targetSocketId).emit('video-hangup', payload);
+    await pushNotification(payload.target, `Call Ended`, 'CANCEL_CALL', socket.userId);
   });
 
   socket.on('new-ice-candidate', (payload) => {

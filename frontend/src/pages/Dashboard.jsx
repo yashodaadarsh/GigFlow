@@ -87,8 +87,8 @@ export default function Dashboard() {
         setHiringGig({ gigId, bidderId });
         try {
             await api.post(`/gigs/${gigId}/hire/${bidderId}`);
-            // Navigate directly to the project pipeline
-            navigate(`/project/${gigId}`);
+            // Navigate directly to the gig pipeline
+            navigate(`/gig-pipeline/${gigId}`);
         } catch (err) {
             alert(err.response?.data?.message || 'Hire action failed');
         } finally { setHiringGig(null); }
@@ -372,7 +372,7 @@ export default function Dashboard() {
                                                                 {(gig.status === 'ACCEPTED' || gig.status === 'ONGOING' || gig.status === 'ASSIGNED' || gig.status === 'COMPLETED' || gig.status === 'PAYMENT_PENDING' || gig.status === 'DELIVERED') && gig.hirerId && (
                                                                     <div className="flex gap-2">
                                                                         <button
-                                                                            onClick={() => navigate(`/project/${gig.id}`)}
+                                                                            onClick={() => navigate(`/gig-pipeline/${gig.id}`)}
                                                                             className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
                                                                         >
                                                                             📈 View Pipeline
@@ -410,7 +410,7 @@ export default function Dashboard() {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                        <textarea required value={description} onChange={e => setDescription(e.target.value)} rows="3" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Project details..."></textarea>
+                                        <textarea required value={description} onChange={e => setDescription(e.target.value)} rows="3" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Gig details..."></textarea>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Required Skills</label>
