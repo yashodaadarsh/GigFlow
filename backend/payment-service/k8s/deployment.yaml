@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+      - name: payment-service
+        image: yashodaadarsh/payment-service:1
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 5001   # 🔥 FIXED
+
+        env:
+        - name: PORT
+          value: "5001"
+
+        # 🔥 IMPORTANT: Replace localhost with service names
+        - name: GIG_SERVICE_URL
+          value: "http://gig-service:8080"
+
+        - name: NOTIFICATION_SERVICE_URL
+          value: "http://notification-service:8080"
+
+        envFrom:
+        - secretRef:
+            name: payment-secret

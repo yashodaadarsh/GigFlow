@@ -1,0 +1,210 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: gigflow-ingress
+#   annotations:
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+#     nginx.ingress.kubernetes.io/rewrite-target: /$2
+#     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+#     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+# spec:
+#   rules:
+#   - http:
+#       paths:
+
+#       # ----------- AUTH -----------
+#       - path: /api/auth(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: auth-service
+#             port:
+#               number: 8080
+
+#       # ----------- GIGS -----------
+#       - path: /api/gigs(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: gig-service
+#             port:
+#               number: 8080
+
+#       # ----------- NOTIFICATIONS -----------
+#       - path: /api/notifications(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: notification-service
+#             port:
+#               number: 8080
+
+#       # ----------- PAYMENTS -----------
+#       - path: /api/payments(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: payment-service
+#             port:
+#               number: 8080
+
+#       # ----------- ML SERVICE -----------
+#       - path: /api/ml(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: ml-service
+#             port:
+#               number: 8080
+
+#       # ----------- CHAT / VIDEO (REST) -----------
+#       - path: /api/chat(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: communication-service
+#             port:
+#               number: 8080
+
+#       - path: /api/video(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: communication-service
+#             port:
+#               number: 8080
+
+#       # ----------- WEBSOCKETS -----------
+
+#       - path: /socket.io(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: communication-service
+#             port:
+#               number: 8080
+
+#       - path: /ws(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: notification-service
+#             port:
+#               number: 8080
+
+#       # ----------- FRONTEND (LAST) -----------
+
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: frontend-service
+#             port:
+#               number: 80
+
+
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gigflow-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+
+spec:
+  rules:
+  - http:
+      paths:
+
+      # ----------- AUTH -----------
+      - path: /api/auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8080
+
+      # ----------- GIGS -----------
+      - path: /api/gigs
+        pathType: Prefix
+        backend:
+          service:
+            name: gig-service
+            port:
+              number: 8080
+
+      # ----------- NOTIFICATIONS -----------
+      - path: /api/notifications
+        pathType: Prefix
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 8080
+
+      # ----------- PAYMENTS -----------
+      - path: /api/payments
+        pathType: Prefix
+        backend:
+          service:
+            name: payment-service
+            port:
+              number: 8080
+
+      # ----------- ML SERVICE -----------
+      - path: /api/ml
+        pathType: Prefix
+        backend:
+          service:
+            name: ml-service
+            port:
+              number: 8080
+
+      # ----------- CHAT / VIDEO -----------
+      - path: /api/chat
+        pathType: Prefix
+        backend:
+          service:
+            name: communication-service
+            port:
+              number: 8080
+
+      - path: /api/video
+        pathType: Prefix
+        backend:
+          service:
+            name: communication-service
+            port:
+              number: 8080
+
+      # ----------- WEBSOCKETS -----------
+
+      - path: /socket.io
+        pathType: Prefix
+        backend:
+          service:
+            name: communication-service
+            port:
+              number: 8080
+
+      - path: /ws
+        pathType: Prefix
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 8080
+
+      # ----------- FRONTEND (LAST) -----------
+
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80

@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: yashodaadarsh/notification-service:3
-        imagePullPolicy: Always
+        image: yashodaadarsh/notification-service:1
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8080
+        - containerPort: 8083
 
         envFrom:
         - secretRef:

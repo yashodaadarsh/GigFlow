@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: communication-service-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: communication-service
+  template:
+    metadata:
+      labels:
+        app: communication-service
+    spec:
+      containers:
+      - name: communication-service
+        image: yashodaadarsh/communication-service:1
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 5000   # 🔥 FIXED
+
+        env:
+        - name: PORT
+          value: "5000"
+
+        envFrom:
+        - secretRef:
+            name: db-secret

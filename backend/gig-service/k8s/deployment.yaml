@@ -14,10 +14,19 @@ spec:
     spec:
       containers:
       - name: gig-service
-        image: yashodaadarsh/gig-service:1
-        imagePullPolicy: Always
+        image: yashodaadarsh/gig-service:2   # 🔥 update image after rebuild
+        imagePullPolicy: IfNotPresent
+
         ports:
-        - containerPort: 8080
+        - containerPort: 8082
+
+        # ✅ FIXED ENV VARIABLES
+        env:
+        - name: ML_SERVICE_URL
+          value: "http://ml-service:8080"
+
+        - name: NOTIFICATION_SERVICE_URL
+          value: "http://notification-service:8080"
 
         envFrom:
         - secretRef:

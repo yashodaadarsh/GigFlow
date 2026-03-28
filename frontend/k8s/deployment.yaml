@@ -1,20 +1,42 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: frontend-app-deployment
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: frontend-app
+#   template:
+#     metadata:
+#       labels:
+#         app: frontend-app
+#     spec:
+#       containers:
+#       - name: frontend-app
+#         image: yashodaadarsh/frontend-service:8
+#         imagePullPolicy: IfNotPresent
+#         ports:
+#         - containerPort: 5173
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-app-deployment
+  name: frontend
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: frontend-app
+      app: frontend
   template:
     metadata:
       labels:
-        app: frontend-app
+        app: frontend
     spec:
       containers:
-      - name: frontend-app
-        image: yashodaadarsh/frontend-service:8
+      - name: frontend
+        image: yashodaadarsh/frontend-service:1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 5173
+        - containerPort: 80

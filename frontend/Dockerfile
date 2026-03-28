@@ -1,13 +1,10 @@
-FROM node:24-bookworm-slim
-
+# Step 1: Build
+FROM node:18 AS build
 WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
-
 COPY . .
+RUN npm install
+RUN npm run build
 
-EXPOSE 5173
-
-CMD ["npm", "run", "dev"]
+# Step 2: Serve with NGINX
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html

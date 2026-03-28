@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ml-service
-        image: yashodaadarsh/ml-recommendation-service:8
-        imagePullPolicy: Always
+        image: yashodaadarsh/ml-recommendation-service:1
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8080
+        - containerPort: 8000
