@@ -21,4 +21,4 @@ spec:
 
         envFrom:
         - secretRef:
-            name: db-secret
+            name: db-secret-notification

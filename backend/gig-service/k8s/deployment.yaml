@@ -28,6 +28,9 @@ spec:
         - name: NOTIFICATION_SERVICE_URL
           value: "http://notification-service:8080"
 
+        - name: AUTH_SERVICE_URL
+          value: "http://auth-service:8080"
+
         envFrom:
         - secretRef:
-            name: db-secret
+            name: db-secret-gig

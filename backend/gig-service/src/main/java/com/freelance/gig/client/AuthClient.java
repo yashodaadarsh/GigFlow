@@ -18,7 +18,8 @@ public class AuthClient {
 
     // Hardcode port for now since we're using distinct local microservices without
     // a registry
-    private final String authServiceUrl = "http://localhost:8081";
+    @Value("${auth.service.url}")
+    private String authServiceUrl;
 
     public List<UserProfileDto> getUsers(List<Long> userIds) {
         try {

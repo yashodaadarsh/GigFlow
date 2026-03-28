@@ -33,4 +33,4 @@ spec:
 
         envFrom:
         - secretRef:
-            name: payment-secret
+            name: db-payment-secret
