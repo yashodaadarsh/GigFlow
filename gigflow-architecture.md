@@ -45,8 +45,7 @@ GIGFLOW is a gig-work platform connecting Hirers with Bidders through an asynchr
 | **Gig Service** | Spring Boot + MongoDB | CRUD operations for gigs, bid management |
 | **Bid Service** | Spring Boot + PostgreSQL | Bid lifecycle, bidding rules, history |
 | **Recommendation Service** | Python + FastAPI + Vector DB | ML predictions, similarity matching |
-| **Chat Service** | Spring Boot + MongoDB | Real-time messaging, file storage |
-| **Video Service** | Spring Boot + WebRTC | Video call orchestration, signaling |
+| **Communication Service** | Node.js + MySQL + WebRTC | Real-time chat messaging, video call signaling, socket sessions |
 | **Payment Service** | Spring Boot + PostgreSQL | Escrow, transactions, payment processing |
 | **Notification Service** | Spring Boot + Redis Pub/Sub | Push notifications, email, SMS |
 | **Analytics Service** | Spring Boot + ClickHouse | Aggregated metrics, dashboards |
@@ -70,8 +69,7 @@ graph TB
         User[User Service]
         Gig[Gig Service]
         Bid[Bid Service]
-        Chat[Chat Service]
-        Video[Video Service]
+        Communication[Communication Service]
         Payment[Payment Service]
     end
     
@@ -96,8 +94,7 @@ graph TB
     Gateway --> User
     Gateway --> Gig
     Gateway --> Bid
-    Gateway --> Chat
-    Gateway --> Video
+    Gateway --> Communication
     Gateway --> Payment
     
     Gig --> Kafka
@@ -174,13 +171,13 @@ erDiagram
 | User Service | PostgreSQL | Relational user profiles, relationships |
 | Gig Service | MongoDB | Flexible schema for gig attributes, nested bids |
 | Bid Service | PostgreSQL | Transactional integrity for bid lifecycle |
-| Chat Service | MongoDB | Document storage for message history |
+| Communication Service | MySQL | ACID compliance for message history and video room states |
 | Payment Service | PostgreSQL | ACID compliance for financial transactions |
 | Recommendation Service | PostgreSQL + Vector DB | Structured ML features + embeddings |
 | Search Service | Elasticsearch | Full-text search, aggregations |
 | Analytics Service | ClickHouse | OLAP queries, time-series analytics |
 | Notification Service | Redis | Pub/Sub, in-memory queue |
-| Video Service | Redis | Session management, signaling |
+
 
 ---
 

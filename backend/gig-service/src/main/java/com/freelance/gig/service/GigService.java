@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,10 +34,7 @@ public class GigService {
 
     public GigResponse createGig(GigRequest request, Long hirerId) {
         String skillsJson = "";
-        try {
-            skillsJson = objectMapper.writeValueAsString(request.getSkillsRequired());
-        } catch (Exception e) {
-        }
+        try { skillsJson = objectMapper.writeValueAsString(request.getSkillsRequired()); } catch (Exception e) {}
 
         Gig gig = Gig.builder()
                 .postedBy(hirerId)
@@ -49,8 +45,7 @@ public class GigService {
                 .startDate(request.getStartDate())
                 .deadline(request.getDeadline())
                 .build();
-        Gig saved = gigRepository.save(gig);
-        return mapToResponse(saved);
+        return mapToResponse(gigRepository.save(gig));
     }
 
     public List<GigResponse> getOpenGigs() {
@@ -79,16 +74,48 @@ public class GigService {
         gigRepository.save(gig);
     }
 
+    /**
+     * Hire a bidder for a specific gig.
+     * Sets status = ASSIGNED and records hiredBidderId.
+     * Notifies bidder via notification service.
+     */
+    public GigResponse hireForGig(Long gigId, Long bidderId, Long hirerId) {
+        Gig gig = gigRepository.findById(gigId)
+                .orElseThrow(() -> new RuntimeException("Gig not found"));
+
+        if (!gig.getPostedBy().equals(hirerId)) {
+            throw new RuntimeException("Only the gig owner can hire");
+        }
+
+        gig.setStatus(GigStatus.ASSIGNED);
+        gig.setHiredBidderId(bidderId);
+        Gig saved = gigRepository.save(gig);
+
+        // Notify bidder they've been hired
+        notificationClient.sendNotification(bidderId,
+                "🎉 Congratulations! You've been hired for: " + gig.getTitle());
+
+        return mapToResponse(saved);
+    }
+
+    /**
+     * Get gigs where this user is the hired bidder (for bidder's assigned/ongoing view)
+     */
+    public List<GigResponse> getGigsAssignedToBidder(Long bidderId) {
+        return gigRepository.findAll().stream()
+                .filter(g -> bidderId.equals(g.getHiredBidderId()))
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     public void placeBid(Long gigId, BidRequest request, Long bidderId) {
         Gig gig = gigRepository.findById(gigId).orElseThrow();
         if (gig.getStatus() != GigStatus.OPEN) {
             throw new RuntimeException("Gig is not open for bids");
         }
-
         if (bidRepository.existsByGigIdAndBidderId(gigId, bidderId)) {
             throw new RuntimeException("You have already placed a bid on this gig");
         }
-
         Bid bid = Bid.builder()
                 .gigId(gigId)
                 .bidderId(bidderId)
@@ -96,9 +123,7 @@ public class GigService {
                 .budget(request.getBudget())
                 .build();
         bidRepository.save(bid);
-
-        // Notify Hirer
-        notificationClient.sendNotification(gig.getPostedBy(), "New bid placed on gig: " + gig.getTitle());
+        notificationClient.sendNotification(gig.getPostedBy(), "New bid on gig: " + gig.getTitle());
     }
 
     public List<Bid> getBidsForGig(Long gigId) {
@@ -108,33 +133,24 @@ public class GigService {
     public List<MLRecommendationScore> getRecommendations(Long gigId) {
         Gig gig = gigRepository.findById(gigId).orElseThrow(() -> new RuntimeException("Gig not found"));
         List<Bid> bids = bidRepository.findByGigId(gigId);
+        if (bids.isEmpty()) return new ArrayList<>();
 
-        if (bids.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        // Fetch User Profiles for Bidders
         List<Long> bidderIds = bids.stream().map(Bid::getBidderId).distinct().collect(Collectors.toList());
         List<UserProfileDto> userProfiles = authClient.getUsers(bidderIds);
 
-        // Map to ML Request
         MLRecommendationRequest mlReq = new MLRecommendationRequest();
-
-        // Gig mapped
         List<String> gigSkills = new ArrayList<>();
         try {
             if (gig.getSkillsRequired() != null && !gig.getSkillsRequired().isEmpty()) {
                 gigSkills = objectMapper.readValue(gig.getSkillsRequired(), List.class);
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         mlReq.setGig(MLRecommendationRequest.Gig.builder()
                 .skills(gigSkills)
-                .budget(gig.getBudget() != null ? gig.getBudget().doubleValue() : 0.0)
+                .budget(gig.getBudget() != null ? gig.getBudget() : 0.0)
                 .build());
 
-        // Bidders mapped
         List<MLRecommendationRequest.Bidder> mlBidders = new ArrayList<>();
         for (UserProfileDto profile : userProfiles) {
             mlBidders.add(MLRecommendationRequest.Bidder.builder()
@@ -146,21 +162,13 @@ public class GigService {
         }
         mlReq.setBidders(mlBidders);
 
-        // Call ML Service
         List<MLRecommendationScore> scores = mlClient.getRecommendations(mlReq);
-
-        // Enrich scores with bidder names from user profiles
         if (scores != null) {
             java.util.Map<Long, String> idToName = userProfiles.stream()
                     .collect(Collectors.toMap(UserProfileDto::getId, UserProfileDto::getName, (a, b) -> a));
             scores.forEach(s -> s.setBidderName(idToName.getOrDefault(s.getBidderId(), "Unknown")));
         }
-
-        // Take Top 5
-        if (scores != null && scores.size() > 5) {
-            return scores.subList(0, 5);
-        }
-        return scores != null ? scores : new ArrayList<>();
+        return (scores != null && scores.size() > 5) ? scores.subList(0, 5) : (scores != null ? scores : new ArrayList<>());
     }
 
     public List<GigResponse> getGigsBiddedBy(Long bidderId) {
@@ -172,17 +180,17 @@ public class GigService {
     }
 
     private GigResponse mapToResponse(Gig gig) {
-        java.util.List<String> skillsList = new java.util.ArrayList<>();
+        List<String> skillsList = new ArrayList<>();
         try {
             if (gig.getSkillsRequired() != null && !gig.getSkillsRequired().isEmpty()) {
-                skillsList = objectMapper.readValue(gig.getSkillsRequired(),
-                        java.util.List.class);
+                skillsList = objectMapper.readValue(gig.getSkillsRequired(), List.class);
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         return GigResponse.builder()
                 .id(gig.getId())
+                .hirerId(gig.getPostedBy())
+                .hiredBidderId(gig.getHiredBidderId())
                 .title(gig.getTitle())
                 .description(gig.getDescription())
                 .skillsRequired(skillsList)

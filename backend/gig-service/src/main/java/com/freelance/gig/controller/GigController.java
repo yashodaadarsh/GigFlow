@@ -11,15 +11,17 @@ import com.freelance.gig.service.GigService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/gigs")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // For development
+@CrossOrigin(origins = "*")
 public class GigController {
 
     private final GigService gigService;
@@ -32,13 +34,12 @@ public class GigController {
             Claims claims = jwtService.extractAllClaims(jwt);
             return claims.get("userId", Long.class);
         }
-        return -1L; // fallback
+        return -1L;
     }
 
     @PostMapping
     public ResponseEntity<GigResponse> createGig(@RequestBody GigRequest request, HttpServletRequest httpRequest) {
-        Long userId = extractUserId(httpRequest);
-        return ResponseEntity.ok(gigService.createGig(request, userId));
+        return ResponseEntity.ok(gigService.createGig(request, extractUserId(httpRequest)));
     }
 
     @GetMapping
@@ -48,14 +49,18 @@ public class GigController {
 
     @GetMapping("/my-gigs")
     public ResponseEntity<List<GigResponse>> getMyGigs(HttpServletRequest httpRequest) {
-        Long userId = extractUserId(httpRequest);
-        return ResponseEntity.ok(gigService.getGigsByHirerId(userId));
+        return ResponseEntity.ok(gigService.getGigsByHirerId(extractUserId(httpRequest)));
     }
 
     @GetMapping("/my-bids")
     public ResponseEntity<List<GigResponse>> getMyBiddedGigs(HttpServletRequest httpRequest) {
-        Long userId = extractUserId(httpRequest);
-        return ResponseEntity.ok(gigService.getGigsBiddedBy(userId));
+        return ResponseEntity.ok(gigService.getGigsBiddedBy(extractUserId(httpRequest)));
+    }
+
+    /** Bidder: get gigs they've been assigned/hired for */
+    @GetMapping("/assigned")
+    public ResponseEntity<List<GigResponse>> getAssignedGigs(HttpServletRequest httpRequest) {
+        return ResponseEntity.ok(gigService.getGigsAssignedToBidder(extractUserId(httpRequest)));
     }
 
     @GetMapping("/{id}")
@@ -66,14 +71,29 @@ public class GigController {
     @PostMapping("/{id}/bids")
     public ResponseEntity<Void> placeBid(@PathVariable Long id, @RequestBody BidRequest request,
             HttpServletRequest httpRequest) {
-        Long userId = extractUserId(httpRequest);
-        gigService.placeBid(id, request, userId);
+        gigService.placeBid(id, request, extractUserId(httpRequest));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/bids")
     public ResponseEntity<List<Bid>> getBidsForGig(@PathVariable Long id) {
         return ResponseEntity.ok(gigService.getBidsForGig(id));
+    }
+
+    /** Hirer hires a specific bidder for a gig */
+    @PostMapping("/{gigId}/hire/{bidderId}")
+    public ResponseEntity<?> hireForGig(
+            @PathVariable Long gigId,
+            @PathVariable Long bidderId,
+            HttpServletRequest httpRequest) {
+        Long hirerId = extractUserId(httpRequest);
+        try {
+            GigResponse response = gigService.hireForGig(gigId, bidderId, hirerId);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}/status")

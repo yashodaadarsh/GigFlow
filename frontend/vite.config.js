@@ -20,6 +20,22 @@ export default defineConfig({
             '/api/notifications': {
                 target: 'http://localhost:8083',
                 changeOrigin: true,
+            },
+            '/api/payments': {
+                target: 'http://localhost:5001',
+                changeOrigin: true,
+            },
+            '/api/chat': {
+                target: 'http://localhost:5000',
+                changeOrigin: true,
+            },
+            '/api/video': {
+                target: 'http://localhost:5000',
+                changeOrigin: true,
+            },
+            '/socket.io': {
+                target: 'ws://localhost:5000',
+                ws: true,
             }
         }
     }

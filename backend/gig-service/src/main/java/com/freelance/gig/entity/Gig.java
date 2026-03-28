@@ -19,6 +19,9 @@ public class Gig {
     @Column(name = "posted_by", nullable = false)
     private Long postedBy; // Hirer ID
 
+    @Column(name = "hired_bidder_id")
+    private Long hiredBidderId; // Set when hirer hires a bidder
+
     private String title;
 
     @Column(columnDefinition = "TEXT")
