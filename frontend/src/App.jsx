@@ -11,7 +11,7 @@ import GigBidsPage from './pages/GigBidsPage';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import VideoCall from './pages/VideoCall';
-import ProjectPipeline from './pages/ProjectPipeline';
+import GigPipeline from './pages/GigPipeline';
 import IncomingCallModal from './components/IncomingCallModal';
 import { addNotification, setIncomingCall, fetchNotifications } from './redux/slices/notifications.slice';
 import SockJS from 'sockjs-client';
@@ -37,7 +37,7 @@ function App() {
 
         dispatch(fetchNotifications(user.id));
 
-        const stompClient = Stomp.over(() => new SockJS('http://localhost:8083/ws'));
+        const stompClient = Stomp.over(() => new SockJS('/ws'));
         stompClient.debug = () => {}; // Silence debug logs
         
         stompClient.connect({}, () => {
@@ -118,20 +118,20 @@ function App() {
                     </ProtectedRoute>
                 } />
 
-                <Route path="/chat/:bidderId" element={
+                <Route path="/chat/:nodeId" element={
                     <ProtectedRoute>
                         <Chat />
                     </ProtectedRoute>
                 } />
-                <Route path="/video-call/:bidderId" element={
+                <Route path="/video-call/:nodeId" element={
                     <ProtectedRoute>
                         <VideoCall />
                     </ProtectedRoute>
                 } />
-                <Route path="/project/:gigId" element={
+                <Route path="/gig-pipeline/:gigId" element={
                     <ProtectedRoute>
                         <DesktopLayout>
-                            <ProjectPipeline />
+                            <GigPipeline />
                         </DesktopLayout>
                     </ProtectedRoute>
                 } />

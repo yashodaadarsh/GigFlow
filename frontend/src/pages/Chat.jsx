@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Terminal, Video, ArrowLeft, Send, Activity, ShieldCheck, Cpu } from 'lucide-react';
 import api from '../api/api';
 
 export default function Chat() {
-    const { bidderId } = useParams();
+    const { nodeId } = useParams();
     const navigate = useNavigate();
     const { user } = useSelector(state => state.auth);
 
@@ -14,48 +16,39 @@ export default function Chat() {
     const [room, setRoom] = useState(null);
     const [bidderProfile, setBidderProfile] = useState(null);
     const [connected, setConnected] = useState(false);
-    const [gigId, setGigId] = useState(null);
     const socketRef = useRef(null);
     const bottomRef = useRef(null);
 
-    // Fetch bidder profile for display
-    useEffect(() => {
-        api.get(`/auth/profile/${bidderId}`)
-            .then(res => setBidderProfile(res.data))
-            .catch(console.error);
-    }, [bidderId]);
-
-    // Determine who is hirer and who is bidder in this chat
-    // If current user is HIRER: they chat with bidderId from params
-    // If current user is BIDDER: bidderId param is actually the hirerId
     const currentRole = (user?.role || '').toUpperCase();
     const isHirer = currentRole === 'HIRER';
-    const actualHirerId = isHirer ? user?.id : bidderId;
-    const actualBidderId = isHirer ? bidderId : user?.id;
+    const actualHirerId = isHirer ? user?.id : nodeId;
+    const actualBidderId = isHirer ? nodeId : user?.id;
 
-    // Get or create a chat room
     useEffect(() => {
-        if (!user) return;
+        if (!nodeId) return;
+        api.get(`/auth/profile/${nodeId}`)
+            .then(res => setBidderProfile(res.data))
+            .catch(err => console.error('PROFILE_SYNC_ERR', err));
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!user || !nodeId) return;
         api.post('/chat/rooms', {
             gig_id: 0,
             hirer_id: actualHirerId,
             bidder_id: actualBidderId,
-            hirer_name: isHirer ? user.name : undefined,
         })
             .then(res => {
-                const roomData = res.data;
-                setRoom(roomData);
-                return api.get(`/chat/rooms/${roomData.id}/messages`);
+                setRoom(res.data);
+                return api.get(`/chat/rooms/${res.data.id}/messages`);
             })
             .then(res => setMessages(res.data))
-            .catch(console.error);
-    }, [user, bidderId]);
+            .catch(err => console.error('ROOM_INIT_ERR', err));
+    }, [user, nodeId]);
 
-    // Connect Socket.io once we have a room
     useEffect(() => {
         if (!room) return;
-
-        const socket = io(); // Connects to the same origin through the Vite proxy
+        const socket = io();
         socketRef.current = socket;
 
         socket.on('connect', () => {
@@ -68,11 +61,9 @@ export default function Chat() {
         });
 
         socket.on('disconnect', () => setConnected(false));
-
         return () => { socket.disconnect(); };
     }, [room]);
 
-    // Auto-scroll to bottom
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -88,80 +79,117 @@ export default function Chat() {
         setInput('');
     };
 
-    const getInitials = (name) => name ? name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '?';
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col items-center py-8 px-4">
-            <div className="w-full max-w-2xl flex flex-col" style={{ height: '85vh' }}>
-                {/* Header */}
-                <div className="bg-white rounded-2xl shadow-lg p-4 mb-4 flex items-center justify-between">
-                    <button onClick={() => navigate(-1)} className="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-2">
-                        ← Back
-                    </button>
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold text-sm">
-                            {getInitials(bidderProfile?.name)}
-                        </div>
-                        <div>
-                            <div className="font-bold text-gray-900 text-sm">{bidderProfile?.name || `Bidder #${bidderId}`}</div>
-                            <div className={`text-xs font-semibold ${connected ? 'text-green-500' : 'text-gray-400'}`}>
-                                {connected ? '● Connected' : '○ Connecting...'}
+        <div className="min-h-screen bg-[#0A0A0B] flex flex-col items-center py-12 px-4 relative overflow-hidden font-sans">
+            {/* Background Grid */}
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                style={{ backgroundImage: `linear-gradient(#10b981 1px, transparent 1px), linear-gradient(90deg, #10b981 1px, transparent 1px)`, backgroundSize: '40px 40px' }}
+            />
+
+            <div className="w-full max-w-3xl flex flex-col relative z-10" style={{ height: '85vh' }}>
+
+                {/* 1. Terminal Header */}
+                <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 mb-4 flex items-center justify-between shadow-2xl">
+                    <div className="flex items-center gap-6">
+                        <button onClick={() => navigate(-1)} className="text-gray-500 hover:text-[#10b981] transition-colors">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <div className="flex items-center gap-4 border-l border-white/5 pl-6">
+                            <div className="w-10 h-10 rounded-lg bg-[#10b981]/10 border border-[#10b981]/20 flex items-center justify-center text-[#10b981] font-black italic">
+                                {bidderProfile?.name?.charAt(0) || '?'}
+                            </div>
+                            <div>
+                                <div className="text-xs font-black text-white uppercase tracking-tighter italic">
+                                    NODE_{bidderProfile?.name?.replace(/\s+/g, '_').toUpperCase() || 'UNKNOWN'}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <Activity size={10} className={connected ? 'text-[#10b981] animate-pulse' : 'text-red-500'} />
+                                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-500">
+                                        {connected ? 'Sync_Established' : 'Link_Lost'}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <button
-                        onClick={() => navigate(`/video-call/${bidderId}`)}
-                        className="flex items-center gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 px-4 py-2 rounded-xl font-bold text-sm transition"
+                        onClick={() => navigate(`/video-call/${nodeId}`)}
+                        className="bg-transparent border border-[#22d3ee]/30 hover:bg-[#22d3ee]/10 text-[#22d3ee] px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                        Video Call
+                        <Video size={14} /> Establish_Video_Link
                     </button>
                 </div>
 
-                {/* Messages */}
-                <div className="flex-1 bg-white rounded-2xl shadow-lg p-4 overflow-y-auto flex flex-col gap-3">
+                {/* 2. Message Feed (Encrypted Style) */}
+                <div className="flex-1 bg-[#0F0F10] border border-white/5 rounded-2xl p-6 overflow-y-auto flex flex-col gap-6 scrollbar-hide">
                     {messages.length === 0 && (
-                        <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
-                            <div className="text-5xl mb-4">💬</div>
-                            <p className="font-medium">No messages yet. Say hello!</p>
+                        <div className="flex-1 flex flex-col items-center justify-center opacity-20">
+                            <Terminal size={48} className="text-[#10b981] mb-4" />
+                            <p className="text-[10px] font-black uppercase tracking-[0.4em]">Awaiting_First_Transmission...</p>
                         </div>
                     )}
-                    {messages.map((msg) => {
+
+                    {messages.map((msg, i) => {
                         const isMine = String(msg.sender_id) === String(user?.id);
                         return (
-                            <div key={msg.id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-xs px-4 py-2.5 rounded-2xl text-sm shadow-sm ${
-                                    isMine
-                                        ? 'bg-indigo-600 text-white rounded-br-sm'
-                                        : 'bg-gray-100 text-gray-800 rounded-bl-sm'
-                                }`}>
-                                    <p>{msg.content}</p>
-                                    <p className={`text-xs mt-1 ${isMine ? 'text-indigo-200' : 'text-gray-400'}`}>
-                                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            <motion.div
+                                key={msg.id}
+                                initial={{ opacity: 0, x: isMine ? 10 : -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}
+                            >
+                                <div className={`max-w-md px-5 py-3 rounded-xl relative group ${isMine
+                                        ? 'bg-[#10b981]/10 border border-[#10b981]/20 text-white'
+                                        : 'bg-white/[0.03] border border-white/5 text-gray-300'
+                                    }`}>
+                                    {/* Security Marker */}
+                                    <div className={`absolute top-0 ${isMine ? 'right-0 -mr-1' : 'left-0 -ml-1'} w-1 h-full rounded-full ${isMine ? 'bg-[#10b981]' : 'bg-gray-700'}`} />
+
+                                    <p className="text-sm font-medium leading-relaxed tracking-tight">
+                                        <span className="text-gray-600 mr-2 font-mono">{">"}</span>
+                                        {msg.content}
                                     </p>
+                                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                                        <span className="text-[8px] font-black text-gray-600 uppercase">
+                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                        <ShieldCheck size={10} className="text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         );
                     })}
                     <div ref={bottomRef} />
                 </div>
 
-                {/* Input */}
-                <form onSubmit={sendMessage} className="mt-4 flex gap-3">
-                    <input
-                        className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm"
-                        placeholder="Type a message..."
-                        value={input}
-                        onChange={e => setInput(e.target.value)}
-                    />
+                {/* 3. Input Console */}
+                <form onSubmit={sendMessage} className="mt-4 flex gap-4 relative">
+                    <div className="flex-1 relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600">
+                            <Cpu size={16} />
+                        </div>
+                        <input
+                            className="w-full bg-[#111111] border border-white/10 rounded-xl pl-12 pr-4 py-4 text-sm text-white font-bold focus:outline-none focus:border-[#10b981] transition-all placeholder:text-gray-800"
+                            placeholder="Type_Message_Transmission..."
+                            value={input}
+                            onChange={e => setInput(e.target.value)}
+                        />
+                    </div>
                     <button
                         type="submit"
                         disabled={!connected || !input.trim()}
-                        className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 transition"
+                        className="bg-[#10b981] hover:bg-white disabled:opacity-30 text-[#0A0A0B] px-8 py-4 rounded-xl font-black uppercase text-xs tracking-widest shadow-xl shadow-[#10b981]/10 transition-all active:scale-95"
                     >
-                        Send
+                        [ Send ]
                     </button>
                 </form>
+            </div>
+
+            {/* Status Metadata */}
+            <div className="mt-6 flex gap-8 opacity-20">
+                <div className="text-[8px] font-black text-white uppercase tracking-widest">Protocol: Socket_IO_v4</div>
+                <div className="text-[8px] font-black text-white uppercase tracking-widest">Encryption: AES_256_GCM</div>
+                <div className="text-[8px] font-black text-[#10b981] uppercase tracking-widest">Mesh_Identity: {user?.id}</div>
             </div>
         </div>
     );

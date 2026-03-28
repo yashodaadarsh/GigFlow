@@ -8,7 +8,7 @@ import api from '../api/api';
 const ICE_SERVERS = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
 export default function VideoCall() {
-    const { bidderId: peerIdParam } = useParams(); // could be bidderId (if hirer) or hirerId (if bidder)
+    const { nodeId: peerIdParam } = useParams(); // could be bidderId (if hirer) or hirerId (if bidder)
     const navigate = useNavigate();
     const { user } = useSelector(state => state.auth);
     const location = useLocation();

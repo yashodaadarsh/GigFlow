@@ -36,6 +36,10 @@ export default defineConfig({
             '/socket.io': {
                 target: 'http://localhost:5000',
                 ws: true,
+            },
+            '/ws': {
+                target: 'http://localhost:8083',
+                ws: true,
             }
         }
     }
