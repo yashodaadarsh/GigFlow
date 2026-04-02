@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: payment-service
-        image: yashodaadarsh/payment-service:1
+        image: yashodaadarsh/payment-service:2
         imagePullPolicy: IfNotPresent
 
         ports:
