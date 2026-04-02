@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: yashodaadarsh/notification-service:1
+        image: yashodaadarsh/notification-service:2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8083

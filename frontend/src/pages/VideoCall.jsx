@@ -70,6 +70,12 @@ export default function VideoCall() {
     }, [peerIdParam]);
 
     const getLocalStream = async () => {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert('Camera and microphone access is blocked by your browser. This application must be accessed via a secure connection (HTTPS) or localhost (http://localhost) to use video calls. Please configure port-forwarding to access via localhost.');
+            console.warn('[VideoCall] navigator.mediaDevices is undefined. Proceeding without local media.');
+            return new MediaStream(); // Return empty stream to avoid crashes
+        }
+
         const constraints = [
             { video: true, audio: true },
             { video: false, audio: true },
@@ -98,9 +104,9 @@ export default function VideoCall() {
 
     const connectSocket = useCallback(() => {
         console.log('[VideoCall] Connecting socket...');
-        const socket = io({ 
+        const socket = io({
             transports: ['websocket'],
-            upgrade: false 
+            upgrade: false
         });
         socketRef.current = socket;
 
@@ -122,7 +128,7 @@ export default function VideoCall() {
             await pc.setLocalDescription(answer);
             socket.emit('video-answer', { target: peerIdParam, sdp: answer });
             setCallState('connected');
-            
+
             // Process queued candidates
             while (iceCandidateQueue.current.length > 0) {
                 const candidate = iceCandidateQueue.current.shift();
@@ -236,11 +242,11 @@ export default function VideoCall() {
     // On mount: check if there's a pending offer (callee joining after notification)
     useEffect(() => {
         if (!user || callInitiatedRef.current) return;
-        
+
         // Auto-start or Auto-answer
         if (callState === 'idle') {
             callInitiatedRef.current = true;
-            
+
             if (isCallee) {
                 console.log('[VideoCall] Joining as callee, fetching pending offer...');
                 api.get(`/video/pending-offer/${user.id}`)
@@ -265,7 +271,7 @@ export default function VideoCall() {
                 startCall();
             }
         }
-    }, [user, callState, startCall, isCallee, connectSocket, answerCall]); 
+    }, [user, callState, startCall, isCallee, connectSocket, answerCall]);
 
     const endCall = useCallback(() => {
         socketRef.current?.emit('video-hangup', { target: peerIdParam });
@@ -314,11 +320,11 @@ export default function VideoCall() {
         <div className="min-h-screen bg-[#0a0a0c] relative overflow-hidden font-['Inter']">
             {/* Remote video */}
             <div className="w-full max-w-4xl relative rounded-3xl overflow-hidden bg-gray-900 border border-gray-800 shadow-2xl" style={{ aspectRatio: '16/9' }}>
-                <video 
-                    ref={remoteVideoRef} 
-                    autoPlay 
-                    playsInline 
-                    className={`w-full h-full object-cover transition-opacity duration-1000 ${callState === 'connected' ? 'opacity-100' : 'opacity-0 hidden'}`} 
+                <video
+                    ref={remoteVideoRef}
+                    autoPlay
+                    playsInline
+                    className={`w-full h-full object-cover transition-opacity duration-1000 ${callState === 'connected' ? 'opacity-100' : 'opacity-0 hidden'}`}
                 />
 
                 {callState !== 'connected' && (
@@ -363,17 +369,17 @@ export default function VideoCall() {
 
             {/* Controls */}
             <div className="flex items-center gap-6 mt-8 px-8 py-4 bg-gray-900/80 backdrop-blur-xl rounded-[2.5rem] border border-white/5 shadow-2xl">
-                <button 
-                  onClick={() => navigate(-1)} 
-                  className="p-3 rounded-full hover:bg-white/10 text-gray-400 transition-colors"
-                  title="Back"
+                <button
+                    onClick={() => navigate(-1)}
+                    className="p-3 rounded-full hover:bg-white/10 text-gray-400 transition-colors"
+                    title="Back"
                 >
-                  <ChevronLeft size={24} />
+                    <ChevronLeft size={24} />
                 </button>
 
                 {callState === 'idle' && (
-                    <button 
-                        onClick={startCall} 
+                    <button
+                        onClick={startCall}
                         className="px-10 py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-500/20 transition-all active:scale-95"
                     >
                         Start Video Call
@@ -382,20 +388,20 @@ export default function VideoCall() {
 
                 {(callState === 'calling' || callState === 'connected' || callState === 'waiting') && (
                     <>
-                        <button 
-                            onClick={toggleMic} 
+                        <button
+                            onClick={toggleMic}
                             className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all active:scale-95 ${micOn ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-red-600 text-white animate-pulse'}`}
                         >
                             {micOn ? <Mic size={24} /> : <MicOff size={24} />}
                         </button>
-                        <button 
-                            onClick={toggleCam} 
+                        <button
+                            onClick={toggleCam}
                             className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all active:scale-95 ${camOn ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-red-600 text-white animate-pulse'}`}
                         >
                             {camOn ? <VideoIcon size={24} /> : <VideoOff size={24} />}
                         </button>
-                        <button 
-                            onClick={endCall} 
+                        <button
+                            onClick={endCall}
                             className="px-10 py-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-sm uppercase tracking-widest transition-all active:scale-95 shadow-xl shadow-red-500/20 flex items-center gap-2"
                         >
                             <PhoneOff size={20} />
