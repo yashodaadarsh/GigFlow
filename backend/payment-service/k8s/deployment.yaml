@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-service-deployment
+  name: payment-service-app-deployment
 spec:
   replicas: 1
   selector:
