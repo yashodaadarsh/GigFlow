@@ -172,7 +172,7 @@ export default function Dashboard() {
         <div className="bg-gray-50 min-h-screen p-8">
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header */}
-                <div className="bg-white shadow-lg rounded-2xl p-6 flex justify-between items-center">
+                <div className="bg-white shadow-lg rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                     <div>
                         <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard</h2>
                         <p className="text-sm text-gray-500 mt-1">Logged in as <span className="font-semibold text-blue-600">{user?.name} ({user?.role})</span></p>
@@ -186,13 +186,12 @@ export default function Dashboard() {
                 {notifications.length > 0 && (
                     <div className="space-y-2">
                         {notifications.slice(0, 5).map((notif, i) => (
-                            <div key={i} className={`rounded-xl px-5 py-4 flex items-center justify-between shadow-sm border ${
-                                notif.type === 'INCOMING_VIDEO_CALL'
+                            <div key={i} className={`rounded-xl px-5 py-4 flex items-center justify-between shadow-sm border ${notif.type === 'INCOMING_VIDEO_CALL'
                                     ? 'bg-pink-50 border-pink-200 text-pink-800'
                                     : notif.type === 'CHAT_REQUEST' || notif.type === 'NEW_MESSAGE'
                                         ? 'bg-indigo-50 border-indigo-200 text-indigo-800'
                                         : 'bg-blue-50 border-blue-200 text-blue-800'
-                            }`}>
+                                }`}>
                                 <div className="flex items-center gap-3">
                                     <span className="text-xl">
                                         {notif.type === 'INCOMING_VIDEO_CALL' ? '📹' : notif.type === 'CHAT_REQUEST' ? '💬' : notif.type === 'NEW_MESSAGE' ? '✉️' : '🔔'}
@@ -238,7 +237,7 @@ export default function Dashboard() {
                                 <div className="space-y-4">
                                     {gigs.map(gig => (
                                         <div key={gig.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow bg-gray-50 group">
-                                            <div className="flex justify-between items-start">
+                                            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0">
                                                 <div>
                                                     <h4 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{gig.title}</h4>
                                                     <p className="text-sm text-gray-600 mt-1">{gig.description}</p>
@@ -307,7 +306,7 @@ export default function Dashboard() {
                                                                 <div>
                                                                     <span className="font-semibold text-gray-900">{bidderNames[bid.bidderId] || `Bidder #${bid.bidderId}`}</span>
                                                                     <Link to={`/profile/${bid.bidderId}`} className="text-xs text-indigo-500 hover:underline ml-2">View Profile →</Link>
-                                                                     <p className="text-gray-600 mt-1">{bid.proposal}</p>
+                                                                    <p className="text-gray-600 mt-1">{bid.proposal}</p>
                                                                 </div>
                                                                 <div className="flex flex-col items-end gap-2">
                                                                     <div className="text-green-600 font-bold">${bid.budget}</div>
@@ -339,12 +338,12 @@ export default function Dashboard() {
                                         <div className="space-y-4">
                                             {biddedGigs.map(gig => {
                                                 const statusColors = {
-                                                    PENDING:     'bg-yellow-100 text-yellow-800 border-yellow-200',
+                                                    PENDING: 'bg-yellow-100 text-yellow-800 border-yellow-200',
                                                     SHORTLISTED: 'bg-blue-100 text-blue-800 border-blue-200',
-                                                    ACCEPTED:    'bg-green-100 text-green-800 border-green-200',
-                                                    REJECTED:    'bg-red-100 text-red-700 border-red-200',
-                                                    ONGOING:     'bg-indigo-100 text-indigo-800 border-indigo-200',
-                                                    COMPLETED:   'bg-gray-100 text-gray-700 border-gray-200',
+                                                    ACCEPTED: 'bg-green-100 text-green-800 border-green-200',
+                                                    REJECTED: 'bg-red-100 text-red-700 border-red-200',
+                                                    ONGOING: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                                                    COMPLETED: 'bg-gray-100 text-gray-700 border-gray-200',
                                                 };
                                                 const statusIcons = {
                                                     PENDING: '⏳', SHORTLISTED: '⭐', ACCEPTED: '✅',
@@ -353,8 +352,8 @@ export default function Dashboard() {
                                                 const statusClass = statusColors[gig.status] || 'bg-gray-100 text-gray-600 border-gray-200';
                                                 return (
                                                     <div key={gig.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow bg-white group">
-                                                        <div className="flex justify-between items-start">
-                                                            <div className="flex-1">
+                                                        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0">
+                                                            <div className="flex-1 block w-full max-w-full">
                                                                 <h4 className="text-lg font-bold text-gray-900 group-hover:text-indigo-700 transition-colors">{gig.title}</h4>
                                                                 <p className="text-sm text-gray-600 mt-1">{gig.description}</p>
                                                                 <div className="mt-3 flex flex-wrap gap-2">

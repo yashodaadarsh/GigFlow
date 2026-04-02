@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function Hero() {
     return (
-        <section className="relative pt-44 pb-32 px-6 overflow-hidden bg-[#0A0A0B]">
+        <section className="relative pt-32 md:pt-44 pb-20 md:pb-32 px-6 overflow-hidden bg-[#0A0A0B]">
             {/* Dynamic Background Glows */}
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#10b981]/5 blur-[120px] rounded-full" />
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#06b6d4]/5 blur-[100px] rounded-full" />
@@ -34,8 +34,8 @@ export default function Hero() {
                         <span className="text-white"> Atomic Hiring Logic</span>—where clients assign gigs and bidders secure work through a seamless ecosystem.
                     </p>
 
-                    <div className="flex flex-wrap gap-8 items-center">
-                        <button className="px-10 py-5 bg-black border-2 border-[#10b981]/40 text-[#10b981] font-black rounded-sm hover:bg-[#10b981] hover:text-black transition-all shadow-[0_0_30px_rgba(16,185,129,0.15)] uppercase tracking-widest text-sm">
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-8 items-center sm:items-start">
+                        <button className="w-full sm:w-auto px-10 py-5 bg-black border-2 border-[#10b981]/40 text-[#10b981] font-black rounded-sm hover:bg-[#10b981] hover:text-black transition-all shadow-[0_0_30px_rgba(16,185,129,0.15)] uppercase tracking-widest text-sm">
                             [ Post a Gig ]
                         </button>
                         <button className="flex items-center gap-3 text-white font-black uppercase tracking-widest text-sm hover:text-[#22d3ee] transition-colors group">

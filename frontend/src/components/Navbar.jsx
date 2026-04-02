@@ -12,6 +12,7 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showNotifs, setShowNotifs] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -107,11 +108,63 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <div className="md:hidden flex items-center">
-          <button className="p-3 text-white/60 hover:text-white bg-white/5 rounded-xl border border-white/10">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-3 text-white/60 hover:text-white bg-white/5 rounded-xl border border-white/10 relative z-50">
             <Menu size={24} />
           </button>
         </div>
       </div>
-    </nav>
+
+      {/* Mobile Navigation Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden fixed inset-x-4 top-[90px] p-6 glass border border-white/10 rounded-2xl shadow-2xl z-40 bg-black/80 backdrop-blur-3xl"
+          >
+            <div className="flex flex-col gap-6 pointer-events-auto">
+              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-black uppercase tracking-widest text-white/60 hover:text-white transition-all flex items-center gap-3">
+                <Terminal size={16} /> Platform
+              </Link>
+
+              {isAuthenticated ? (
+                <>
+                  <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-black uppercase tracking-widest text-white/60 hover:text-white transition-all flex items-center gap-3">
+                    <Activity size={16} /> Console
+                  </Link>
+                  <div className="h-px bg-white/10 my-2 w-full"></div>
+                  <Link to={`/profile/${user?.id}`} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 w-full">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-transform" style={{ background: `linear-gradient(135deg, hsl(${accentColor}), #fff)` }}>
+                      <User size={16} className="text-black" />
+                    </div>
+                    <span className="text-sm font-black text-white uppercase tracking-tighter">
+                      {user?.name}
+                    </span>
+                  </Link>
+                  <button onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }} className="mt-4 px-6 py-3 w-full text-center text-white text-[12px] font-black uppercase tracking-widest rounded-xl hover:bg-white hover:text-black transition-all border border-white/10">
+                    Terminate Session
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="h-px bg-white/10 my-2 w-full"></div>
+                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-black uppercase tracking-widest text-white/60 hover:text-white transition-all">
+                    Log In
+                  </Link>
+                  <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="mt-2 px-8 py-3 w-full text-center bg-indigo-600 text-white text-[12px] font-black uppercase tracking-widest rounded-xl hover:bg-white hover:text-black transition-all shadow-2xl">
+                    [ Sign Up ]
+                  </Link>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+    </nav >
   );
 }
