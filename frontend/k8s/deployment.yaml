@@ -14,7 +14,7 @@
 #     spec:
 #       containers:
 #       - name: frontend-app
-#         image: yashodaadarsh/frontend-service:12
+#         image: yashodaadarsh/frontend-service:13
 #         imagePullPolicy: IfNotPresent
 #         ports:
 #         - containerPort: 5173
@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: yashodaadarsh/frontend-service:12
+        image: yashodaadarsh/frontend-service:13
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
